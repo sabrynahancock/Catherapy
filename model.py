@@ -42,11 +42,12 @@ class Doctor(db.Model):
     appointments = db.relationship("Appointment", back_populates="doctor")
     doctorspecialties = db.relationship("DoctorSpecialties", back_populates="doctor")
     doctoravailability = db.relationship("DoctorAvailabilities", back_populates="doctor")
+    doctorinsurances = db.relationship("DoctorInsurances", back_populates="doctor")
 
     def __repr__(self):
         return f"<Doctor first_name={self.first_name} last_name={self.last_name} email={self.email}>"
 
-
+1
 class Appointment(db.Model):
     """Data model for appointments"""
     __tablename__ = "appointments"
@@ -102,6 +103,19 @@ class Specialties(db.Model):
 
     def __repr__(self):
         return f"<Specialties specialty_name={self.specialty_name}>"
+
+class DoctorInsurances(db.Model):
+    """Connects specialties to doctors table"""
+    __tablename__ = "doctor_insurances"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
+    insurance_name = db.Column(db.String(30), nullable=True)
+    doctor_id = db.Column(db.Integer, db.ForeignKey("doctors.doctor_id"),nullable=True)
+
+    doctor = db.relationship("Doctor", back_populates="doctorinsurances")
+
+    def __repr__(self):
+        return f"<DoctorSpecialties id={self.id}>"
 
 
 class DoctorAvailabilities(db.Model):

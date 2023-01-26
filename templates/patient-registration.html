@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %} Catherapy {% endblock %}
+
+{% block body %}
+    <h1> Patient Registration</h1>
+
+    <form action="/patient-registration-submit" method="POST">
+        <p> First Name <input type="text" name="first_name">
+        </p>
+        <p> Last Name <input type="text" name="last_name">
+        </p>
+        <p> Phone <input type="text" name="phone">
+        </p>
+        <p> Address <input type="text" name="address">
+        </p>
+        <p> Email <input type="text" name="email">
+        </p>
+        <p> Password <input type="password" name="password">
+        </p>
+        
+        <p> <input type="submit">
+        </p> 
+
+
+    </form>
+
+{% endblock %}

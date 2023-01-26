@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %} Catherapy {% endblock %}
+
+{% block body %}
+
+<form action="/select-dates" method="post">
+    {% for time in time_slots %}
+    <div>
+    <input type="checkbox"  
+    id="timeslots"
+    name="time_slots"
+    value="{{time}}" /> 
+    {{time.strftime('%m %d %Y, %H:%M')}} 
+    </div>
+
+{% endfor %}
+<div>
+<button type="submit">Update your calendar</button> 
+</div>
+</form>
+
+{% endblock %}

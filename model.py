@@ -10,16 +10,18 @@ class Patient(db.Model):
     __tablename__ = "patients"
 
     patient_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    first_name = db.Column(db.String(30), nullable=False)
-    last_name = db.Column(db.String(30), nullable=False)
-    phone = db.Column(db.String(30), nullable=True)
-    address = db.Column(db.String(30), nullable=True)
+    first_name = db.Column(db.String(30))
+    last_name = db.Column(db.String(30))
+    phone = db.Column(db.String(30))
+    address = db.Column(db.String(100))
     #add lat long floats
-    email = db.Column(db.String(50), nullable=False)
-    password = db.Column(db.String(20), nullable=True)
+    lat = db.Column(db.Float, nullable=True)
+    long = db.Column(db.Float, nullable=True)
+    email = db.Column(db.String(50))
+    password = db.Column(db.String(20))
 
     appointments = db.relationship("Appointment", back_populates="patient")
-    patientfeelings = db.relationship("PatientFeelings", back_populates="patient")
+    patientfeelings = db.relationship("PatientFeeling", back_populates="patient")
 
     def __repr__(self):
         return f"<Patient first_name={self.first_name} last_name={self.last_name} email={self.email}"
@@ -29,25 +31,27 @@ class Doctor(db.Model):
     __tablename__ = "doctors"
 
     doctor_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    first_name = db.Column(db.String(30), nullable=False)
-    last_name = db.Column(db.String(30), nullable=False)
-    address = db.Column(db.String(30), nullable=True)
+    first_name = db.Column(db.String(30))
+    last_name = db.Column(db.String(30))
+    address = db.Column(db.String(100))
     #add lat long floats
-    phone = db.Column(db.String(30), nullable=True)
-    photo_url = db.Column(db.String(100), nullable=True)
-    bio = db.Column(db.Text , nullable=True)
-    email = db.Column(db.String(50), nullable=False)
-    password = db.Column(db.String(20), nullable=True)
+    lat = db.Column(db.Float, nullable=True)
+    long = db.Column(db.Float, nullable=True)
+    phone = db.Column(db.String(30))
+    photo_url = db.Column(db.String(100))
+    bio = db.Column(db.Text)
+    email = db.Column(db.String(50))
+    password = db.Column(db.String(20))
 
     appointments = db.relationship("Appointment", back_populates="doctor")
-    doctorspecialties = db.relationship("DoctorSpecialties", back_populates="doctor")
-    doctoravailability = db.relationship("DoctorAvailabilities", back_populates="doctor")
-    doctorinsurances = db.relationship("DoctorInsurances", back_populates="doctor")
+    doctorspecialties = db.relationship("DoctorSpecialty", back_populates="doctor")
+    doctoravailabilities = db.relationship("DoctorAvailability", back_populates="doctor")
+    doctorinsurances = db.relationship("DoctorInsurance", back_populates="doctor")
 
     def __repr__(self):
         return f"<Doctor first_name={self.first_name} last_name={self.last_name} email={self.email}>"
 
-1
+
 class Appointment(db.Model):
     """Data model for appointments"""
     __tablename__ = "appointments"
@@ -55,81 +59,80 @@ class Appointment(db.Model):
     appointment_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     doctor_id = db.Column(db.Integer, db.ForeignKey("doctors.doctor_id"),nullable=True)
     patient_id = db.Column(db.Integer, db.ForeignKey("patients.patient_id"),nullable=True)
-    date = db.Column(db.DateTime , nullable=False)
+    datetime = db.Column(db.DateTime , nullable=False)
 
     patient = db.relationship("Patient" , back_populates="appointments")
     doctor = db.relationship("Doctor" , back_populates="appointments")
     def __repr__(self):
         return f"<Appointment date={self.date}>"
 
-class PatientFeelings(db.Model):
+class PatientFeeling(db.Model):
     """Data model for patient feelings"""
     __tablename__ = "patient_feelings"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     patient_id = db.Column(db.Integer, db.ForeignKey("patients.patient_id"),nullable=True)
-    # do i need to autoincrement when patient rate their feeling?
-    feeling_rating = db.Column(db.Integer, autoincrement=False)
-    feeling_comment = db.Column(db.Text , nullable=True)
-    date = db.Column(db.DateTime , nullable=False)
-#do i callthis patient_id or patient????
+    feeling_rating = db.Column(db.Integer)
+    feeling_comment = db.Column(db.Text)
+    datetime = db.Column(db.DateTime)
+
 
     patient = db.relationship("Patient", back_populates="patientfeelings")
 
     def __repr__(self):
         return f"<PatientFeeling feeling_rating={self.feeling_rating} date={self.date}>"
 
-class DoctorSpecialties(db.Model):
+class DoctorSpecialty(db.Model):
     """Connects specialties to doctors table"""
     __tablename__ = "doctor_specialties"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     specialty_name = db.Column(db.String(30), db.ForeignKey("specialties.specialty_name"), nullable=True)
     doctor_id = db.Column(db.Integer, db.ForeignKey("doctors.doctor_id"),nullable=True)
 
     doctor = db.relationship("Doctor", back_populates="doctorspecialties")
-    specialty = db.relationship("Specialties", back_populates="doctorspecialties")
+    specialty = db.relationship("Specialty", back_populates="doctorspecialties")
 
     def __repr__(self):
-        return f"<DoctorSpecialties id={self.id}>"
+        return f"<DoctorSpecialty id={self.id}>"
 
-class Specialties(db.Model):
-    """Data model for Docto's Specialties"""
+class Specialty(db.Model):
+    """Data model for Doctor's Specialties"""
     __tablename__ = "specialties"
 
-    specialty_name = db.Column(db.String(30), primary_key=True, nullable=False)
+    specialty_name = db.Column(db.String(30), primary_key=True)
 
-    doctorspecialties = db.relationship("DoctorSpecialties", back_populates="specialty")
+    doctorspecialties = db.relationship("DoctorSpecialty", back_populates="specialty")
 
     def __repr__(self):
-        return f"<Specialties specialty_name={self.specialty_name}>"
+        return f"<Specialty specialty_name={self.specialty_name}>"
 
-class DoctorInsurances(db.Model):
+class DoctorInsurance(db.Model):
     """Connects specialties to doctors table"""
     __tablename__ = "doctor_insurances"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     insurance_name = db.Column(db.String(30), nullable=True)
-    doctor_id = db.Column(db.Integer, db.ForeignKey("doctors.doctor_id"),nullable=True)
+    doctor_id = db.Column(db.Integer, db.ForeignKey("doctors.doctor_id"))
 
     doctor = db.relationship("Doctor", back_populates="doctorinsurances")
 
     def __repr__(self):
-        return f"<DoctorSpecialties id={self.id}>"
+        return f"<DoctorInsurance id={self.id}>"
 
 
-class DoctorAvailabilities(db.Model):
+class DoctorAvailability(db.Model):
 
-    __tablename__ = "doctor_availability"
+    __tablename__ = "doctor_availabilities"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    doctor_id = db.Column(db.Integer, db.ForeignKey("doctors.doctor_id"),nullable=True)
-    date = db.Column(db.DateTime , nullable=False)
+    doctor_id = db.Column(db.Integer, db.ForeignKey("doctors.doctor_id"))
+    datetime = db.Column(db.DateTime , nullable=False)
 
-    doctor = db.relationship("Doctor", back_populates="doctoravailability")
+    doctor = db.relationship("Doctor", back_populates="doctoravailabilities")
 
     def __repr__(self):
-        return f"<DoctorAvailabilities date={self.date}>"
+        return f"<DoctorAvailability date={self.date}>"
 
 
 
@@ -150,3 +153,4 @@ if __name__ == "__main__":
 
     app = Flask(__name__)
     connect_to_db(app)
+    

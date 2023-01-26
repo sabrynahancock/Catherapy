@@ -1,18 +1,42 @@
 <!doctype html>
 <html>
   <head>
+    <style>
+      table.GeneratedTable {
+        width: 10%;
+        background-color: #ffffff;
+        border-collapse: collapse;
+        border-width: 2px;
+        border-color: #ffe47a;
+        border-style: solid;
+        color: #000000;
+      }
+      
+      table.GeneratedTable td, table.GeneratedTable th {
+        border-width: 1px;
+        border-color: #ffe47a;
+        border-style: solid;
+        padding: 1px;
+      }
+      
+      table.GeneratedTable thead {
+        background-color: #eed677;
+      }
+      </style>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>
       {% block title %}{% endblock %}
     </title>
 
-    {% block head %}{% endblock %}
+    {% block head %}
+    
+    {% endblock %}
   </head>
   <body>
 
 
-    {% block body %}{% endblock %}
+    {% block body %} {% endblock %}
 
   
   </body>

@@ -19,11 +19,19 @@
         </p>
         <p> Photo <input type="text" name="photo_url">
         </p>
+
         <p><label for="bio">Please describe yourself</label></p>
         <textarea id="bio" name="bio" rows="4" cols="50"> </textarea>
+
+{% with messages = get_flashed_messages() %} 
+    {% if messages %}
+        {% for message in messages %}
+            {{ message }}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
         <p> <input type="submit">
         </p> 
-
 
     </form>
 

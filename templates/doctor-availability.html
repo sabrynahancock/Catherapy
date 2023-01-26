@@ -5,16 +5,26 @@
 {% block body %}
 
 <form action="/select-dates" method="post">
-    {% for time in time_slots %}
-    <div>
+<table>
+    {% for day in time_slots %}
+    <tr>
+    {% for time in day %}
+    <td>
     <input type="checkbox"  
     id="timeslots"
     name="time_slots"
     value="{{time}}" /> 
-    {{time.strftime('%m %d %Y, %H:%M')}} 
-    </div>
+    
+    {{time.strftime('%A, ')}}
 
+   {{time.strftime('%I:%M %p')}}
+
+
+    </td>
 {% endfor %}
+</tr>
+{% endfor %}
+</table>
 <div>
 <button type="submit">Update your calendar</button> 
 </div>

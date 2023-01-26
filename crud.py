@@ -50,6 +50,10 @@ def create_doctor_availability(doctor, datetime):
      doctoravailability = DoctorAvailability(doctor=doctor, datetime=datetime)
      return doctoravailability
 
+# def get_specialty(specialty_name):
+#      return Specialty.query.filter
+#TODO FINISH GETTING SPECIALTIES NAMES FROM SPECIALTY TABLE
+
 def get_doctor_by_id(doctor_id):
      """return a doctor by  primary key"""
      return Doctor.query.get(doctor_id)

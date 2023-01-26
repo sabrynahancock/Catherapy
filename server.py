@@ -54,14 +54,16 @@ def login():
 
     if patient and patient.password == password:
         session["patient_email"] = patient.email
+        return redirect("/homepage")
 
     elif doctor and doctor.password == password:
         session["doctor_email"] = doctor.email
+        return redirect("/homepage")
 
     else:
         flash("The email or password you entered was incorrect.")
 
-    return redirect('/homepage')
+        return redirect("/")
 
 
 
@@ -86,6 +88,7 @@ def patient_registration_submit():
 
     if patient:
         flash("Please try using a different email")
+        return redirect("/patient-registration")
 
     else:
         patient = crud.create_patient(first_name, last_name, phone, address, email, password)  
@@ -93,7 +96,7 @@ def patient_registration_submit():
         db.session.commit()
         flash("Account created successfully! Please log in.")
 
-    return redirect("/")
+        return redirect("/")
 
 @app.route("/doctor-registration")
 def doctor_registration():
@@ -115,11 +118,13 @@ def doctor_registration_submit():
     bio = request.form.get("bio")
     email = request.form.get("email")
     password = request.form.get("password")
+
     
     doctor = crud.get_doctor_by_email(email)
 
     if doctor:
         flash("Please try using a different email")
+        return redirect("/doctor-registration")
 
     else:
         doctor = crud.create_doctor(first_name, last_name, address, phone, photo_url, bio, email, password)  
@@ -128,7 +133,7 @@ def doctor_registration_submit():
         db.session.commit()
         flash("Account created successfully! Please log in.")
 
-    return redirect("/")
+        return redirect("/")
 
 
 def availabilities():
@@ -137,16 +142,16 @@ def availabilities():
     time_slots = []
 
     
-    for i in range(0,21):
+    for i in range(0,7):
 
         day = (today + timedelta(days = i))
         start_time = datetime(day.year, day.month, day.day, 8)
-
+        time_slots.append([])
         for hour in range(0,9):
             time = (start_time + timedelta(hours = hour))
 
-            time_slots.append(time)
-            
+            time_slots[i].append(time)
+    print(time_slots)
     return time_slots
     
 

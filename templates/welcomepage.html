@@ -12,7 +12,13 @@
         <p>
             Password <input type="password" name="password">
         </p>
-
+        {% with messages = get_flashed_messages() %} 
+        {% if messages %}
+            {% for message in messages %}
+                {{ message }}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         <p> <input type="submit">
         </p>
 

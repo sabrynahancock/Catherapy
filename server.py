@@ -36,30 +36,7 @@ def home_page():
     if "doctor_email" in session:
         doctor = crud.get_doctor_by_email(session["doctor_email"])
 
-    return render_template("homepage.html", doctor=doctor, patient=patient, time_slots=availabilities())
-
-def availabilities():
-
-    today = datetime.now()
-    time_slots = []
-
-    
-    for i in range(0,21):
-
-        day = (today + timedelta(days = i))
-        start_time = datetime(day.year, day.month, day.day, 8)
-
-        for hour in range(0,9):
-            time = (start_time + timedelta(hours = hour))
-
-            time_slots.append(time)
-            
-    return time_slots
-
-
-
-
-    
+    return render_template("homepage.html", doctor=doctor, patient=patient)
 
 #need to work on homepage for doctors page 
 
@@ -154,6 +131,31 @@ def doctor_registration_submit():
     return redirect("/")
 
 
+def availabilities():
+
+    today = datetime.now()
+    time_slots = []
+
+    
+    for i in range(0,21):
+
+        day = (today + timedelta(days = i))
+        start_time = datetime(day.year, day.month, day.day, 8)
+
+        for hour in range(0,9):
+            time = (start_time + timedelta(hours = hour))
+
+            time_slots.append(time)
+            
+    return time_slots
+    
+
+@app.route("/doctor-availability")
+def update_availability_page():
+
+    return render_template("doctor-availability.html", time_slots=availabilities())
+
+
 @app.route("/select-dates" , methods=["POST"])
 def select_dates():
 
@@ -167,26 +169,24 @@ def select_dates():
 #     # #loop through values
 #     # for value in values:
 
-#     doctor = crud.get_doctor_by_email(session["doctor_email"])
+    doctor = crud.get_doctor_by_email(session["doctor_email"])
 #     doctor_id = doctor.doctor_id
 
-#     for datetime in checked_time_slots:
+    for datetime in checked_time_slots:
 
 
-#         availabilities = crud.create_doctor_availability(doctor, date)
-#         db.session.add(availabilities)
-#         db.commit()             
-#         #     return redirect("/homepage")
+        availability = crud.create_doctor_availability(doctor, datetime)
+        db.session.add(availability)
+    db.session.commit()             
+        #return redirect("/homepage")
         
-        
+    return redirect("/homepage")
 #     #create availabily
 #     #get doctor from session
 
 
 
 
-
-    return redirect("/homepage")
 
     
 

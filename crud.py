@@ -45,9 +45,9 @@ def get_lat_long(address):
 
      return (location.raw['lat'], location.raw['lon'])
 
-def create_doctor_availability(doctor, date):
+def create_doctor_availability(doctor, datetime):
 
-     doctoravailability = DoctorAvailability(doctor=doctor, date=date)
+     doctoravailability = DoctorAvailability(doctor=doctor, datetime=datetime)
      return doctoravailability
 
 def get_doctor_by_id(doctor_id):

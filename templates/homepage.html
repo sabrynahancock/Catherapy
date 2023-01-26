@@ -8,21 +8,7 @@
 
 {% if doctor %}
 <h1>Welcome {{doctor.first_name}}</h1>
-<form action="/select-dates" method="post">
-    {% for time in time_slots %}
-    <div>
-    <input type="checkbox"  
-    id="timeslots"
-    name="time_slots"
-    value="{{time}}" /> 
-    {{time.strftime('%m %d %Y, %H:%M')}} 
-    </div>
-
-{% endfor %}
-<div>
-<button type="submit">Update your calendar</button> 
-</div>
-</form>
+<a href="/doctor-availability"> Update Availability</a>
 
 {% elif patient %}
 

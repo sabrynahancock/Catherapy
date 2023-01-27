@@ -68,6 +68,28 @@ def create_doctor_specialty(doctor, specialty_name):
     return DoctorSpecialty(doctor=doctor, specialty_name=specialty_name)
 
 
+def get_doctor_with_criteria(specialties, insurance):
+    matching_doctors = []
+    all_doctors = Doctor.query.all()
+
+    doctors_with_selected_insurance = []
+
+    for doctor in all_doctors:
+
+        for doctor_insurance in doctor.doctorinsurances:
+            if doctor_insurance.insurance_name == insurance:
+                doctors_with_selected_insurance.append(doctor)
+
+    for doctor in doctors_with_selected_insurance:
+        doctors_specialty_names = []
+        for specialty in doctor.doctorspecialties:
+            doctors_specialty_names.append(specialty.specialty_name)
+        if (set(specialties) <= set(doctors_specialty_names)):
+            matching_doctors.append(doctor)
+
+    return matching_doctors
+
+
 def get_doctor_by_id(doctor_id):
     """return a doctor by  primary key"""
     return Doctor.query.get(doctor_id)

@@ -214,8 +214,22 @@ def update_doctor_profile():
 #     #create availabily
 #     #get doctor from session
 
-# @app.route("/search")
-# def search():
+
+@app.route("/search")
+def search():
+
+    return render_template("search.html", specialties=SPECIALTIES, insurances=INSURANCES)
+
+
+@app.route("/search-submit", methods=["POST"])
+def search_submit():
+
+    checked_specialties = request.form.getlist("doctor_specialty")
+    selected_insurance = request.form.get("doctor_insurance")
+    search_results = crud.get_doctor_with_criteria(
+        checked_specialties, selected_insurance)
+    print(search_results)
+    return render_template("search.html", specialties=SPECIALTIES, insurances=INSURANCES, searchresults=search_results)
 
 
 if __name__ == "__main__":

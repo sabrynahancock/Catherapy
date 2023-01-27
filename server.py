@@ -92,6 +92,7 @@ def patient_registration_submit():
     address = request.form.get("address")
     email = request.form.get("email")
     password = request.form.get("password")
+    
 
 
     
@@ -129,6 +130,7 @@ def doctor_registration_submit():
     bio = request.form.get("bio")
     email = request.form.get("email")
     password = request.form.get("password")
+    gender = request.form.get("gender")
 
     
     doctor = crud.get_doctor_by_email(email)
@@ -138,7 +140,7 @@ def doctor_registration_submit():
         return redirect("/doctor-registration")
 
     else:
-        doctor = crud.create_doctor(first_name, last_name, address, phone, photo_url, bio, email, password)  
+        doctor = crud.create_doctor(first_name, last_name, address, phone, photo_url, bio, email, password, gender)  
 
         db.session.add(doctor)
         db.session.commit()
@@ -199,6 +201,14 @@ def select_dates():
     return redirect("/homepage")
 #     #create availabily
 #     #get doctor from session
+
+# @app.route("/search")
+# def search():
+
+
+
+
+
 
 
 

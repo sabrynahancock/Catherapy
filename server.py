@@ -20,15 +20,14 @@ def welcome_page():
 
     elif "doctor_email" in session:
         return redirect("/homepage")
-    
 
     return render_template("welcomepage.html")
+
 
 @app.route("/homepage")
 def home_page():
     patient = None
     doctor = None
-
 
     if "patient_email" in session:
         patient = crud.get_patient_by_email(session["patient_email"])
@@ -38,9 +37,7 @@ def home_page():
 
     return render_template("homepage.html", doctor=doctor, patient=patient)
 
-#need to work on homepage for doctors page 
-
-        
+# need to work on homepage for doctors page
 
 
 @app.route("/login", methods=['POST'])
@@ -65,17 +62,18 @@ def login():
 
         return redirect("/")
 
+
 @app.route("/logout", methods=['POST'])
 def logout():
-        if "doctor_email" in session:
-            del session["doctor_email"]
-        flash("You're signed out!")
-        return redirect("/")
+    if "doctor_email" in session:
+        del session["doctor_email"]
+    flash("You're signed out!")
+    return redirect("/")
 
-        if "patient_email" in session:
-            del session["patient_email"]
-        flash("You're signed out!")
-        return redirect("/")
+    if "patient_email" in session:
+        del session["patient_email"]
+    flash("You're signed out!")
+    return redirect("/")
 
 
 @app.route("/patient-registration")
@@ -83,6 +81,7 @@ def patient_registration():
     """Register a new patient"""
 
     return render_template("patient-registration.html")
+
 
 @app.route("/patient-registration-submit", methods=["POST"])
 def patient_registration_submit():
@@ -92,10 +91,7 @@ def patient_registration_submit():
     address = request.form.get("address")
     email = request.form.get("email")
     password = request.form.get("password")
-    
 
-
-    
     patient = crud.get_patient_by_email(email)
 
     if patient:
@@ -103,12 +99,14 @@ def patient_registration_submit():
         return redirect("/patient-registration")
 
     else:
-        patient = crud.create_patient(first_name, last_name, phone, address, email, password)  
+        patient = crud.create_patient(
+            first_name, last_name, phone, address, email, password)
         db.session.add(patient)
         db.session.commit()
         flash("Account created successfully! Please log in.")
 
         return redirect("/")
+
 
 @app.route("/doctor-registration")
 def doctor_registration():
@@ -116,7 +114,6 @@ def doctor_registration():
 
     return render_template("doctor-registration.html")
 
-    
 
 @app.route("/doctor-registration-submit", methods=["POST"])
 def doctor_registration_submit():
@@ -132,7 +129,6 @@ def doctor_registration_submit():
     password = request.form.get("password")
     gender = request.form.get("gender")
 
-    
     doctor = crud.get_doctor_by_email(email)
 
     if doctor:
@@ -140,7 +136,8 @@ def doctor_registration_submit():
         return redirect("/doctor-registration")
 
     else:
-        doctor = crud.create_doctor(first_name, last_name, address, phone, photo_url, bio, email, password, gender)  
+        doctor = crud.create_doctor(
+            first_name, last_name, address, phone, photo_url, bio, email, password, gender)
 
         db.session.add(doctor)
         db.session.commit()
@@ -154,34 +151,40 @@ def availabilities():
     today = datetime.now()
     time_slots = []
 
-    
-    for i in range(0,7):
+    for i in range(0, 7):
 
-        day = (today + timedelta(days = i))
+        day = (today + timedelta(days=i))
         start_time = datetime(day.year, day.month, day.day, 8)
         time_slots.append([])
-        for hour in range(0,9):
-            time = (start_time + timedelta(hours = hour))
+        for hour in range(0, 9):
+            time = (start_time + timedelta(hours=hour))
 
             time_slots[i].append(time)
     print(time_slots)
     return time_slots
-    
 
-@app.route("/doctor-availability")
+
+SPECIALTIES = sorted(["Anxiety", "Depression", "Eating Disorder",
+                      "Stress", "PTSD", "ADHD", "Panic", "Grief", "OCD"])
+
+
+INSURANCES = sorted(["Catto", "Doggo", "Purfect", "Meowsome", "Pawsome"])
+
+
+@app.route("/update-doctor-profile")
 def update_availability_page():
 
-    return render_template("doctor-availability.html", time_slots=availabilities())
+    return render_template("update-doctor-profile.html", time_slots=availabilities(), specialties=SPECIALTIES, insurances=INSURANCES)
 
 
-@app.route("/select-dates" , methods=["POST"])
-def select_dates():
+@app.route("/update-doctor-profile-submit", methods=["POST"])
+def update_doctor_profile():
 
-#     # doc_id = crud.get_doctor_by_id(doctor_id)
-#      selected_dates = request.json.get("time_slots")
-#     # dates = cud.create_doctor_availabilities(date, doctor)
-#     # db.session.add()
-#     # logged_in_email = session.get("doctor_email")
+    #     # doc_id = crud.get_doctor_by_id(doctor_id)
+    #      selected_dates = request.json.get("time_slots")
+    #     # dates = cud.create_doctor_availabilities(date, doctor)
+    #     # db.session.add()
+    #     # logged_in_email = session.get("doctor_email")
     checked_time_slots = request.form.getlist("time_slots")
     print(checked_time_slots)
 #     # #loop through values
@@ -192,29 +195,27 @@ def select_dates():
 
     for datetime in checked_time_slots:
 
-
         availability = crud.create_doctor_availability(doctor, datetime)
         db.session.add(availability)
-    db.session.commit()             
-        #return redirect("/homepage")
-        
+
+    # return redirect("/homepage")
+
+    checked_specialties = request.form.getlist("doctor_specialty")
+    for specialty in checked_specialties:
+        db.session.add(crud.create_doctor_specialty(doctor, specialty))
+
+    checked_insurances = request.form.getlist("doctor_insurance")
+    for insurance in checked_insurances:
+        db.session.add(crud.create_doctor_insurance(doctor, insurance))
+
+    db.session.commit()
+
     return redirect("/homepage")
 #     #create availabily
 #     #get doctor from session
 
 # @app.route("/search")
 # def search():
-
-
-
-
-
-
-
-
-
-
-    
 
 
 if __name__ == "__main__":

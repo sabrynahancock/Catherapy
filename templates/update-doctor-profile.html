@@ -1,0 +1,52 @@
+{% extends "base.html" %} {% block title %} Catherapy {% endblock %} {% block
+body %}
+
+<form action="/update-doctor-profile-submit" method="post">
+  <h2>Select your availability</h2>
+  <table>
+    {% for day in time_slots %}
+    <tr>
+      {% for time in day %}
+      <td>
+        <input
+          type="checkbox"
+          id="timeslots"
+          name="time_slots"
+          value="{{time}}"
+        />
+
+        {{time.strftime('%A, ')}} {{time.strftime('%I:%M %p')}}
+      </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </table>
+  <h2>Select your specialties</h2>
+  {% for specialty in specialties %}
+  <input
+    type="checkbox"
+    id="doctorspecialty"
+    name="doctor_specialty"
+    value="{{specialty}}"
+  />
+
+  {{specialty}}
+  <br />
+  {% endfor %}
+  <h2>Select your accepted insurances</h2>
+
+  {% for insurance in insurances %}
+  <input
+    type="checkbox"
+    id="doctorinsurance"
+    name="doctor_insurance"
+    value="{{insurance}}"
+  />
+  {{insurance}} <br />{% endfor %}
+  <br />
+  <div>
+    <button type="submit">Update your profile</button>
+  </div>
+</form>
+
+{% endblock %}

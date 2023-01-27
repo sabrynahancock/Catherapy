@@ -8,6 +8,12 @@
 
 {% if doctor %}
 <h1>Welcome {{doctor.first_name}}</h1>
+
+<form action="/logout" method="POST"> 
+<p> <input type="submit">
+</p>
+
+</form>
 <a href="/doctor-availability"> Update Availability</a>
 
 {% elif patient %}

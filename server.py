@@ -65,6 +65,17 @@ def login():
 
         return redirect("/")
 
+@app.route("/logout", methods=['POST'])
+def logout():
+        if "doctor_email" in session:
+            del session["doctor_email"]
+        flash("You're signed out!")
+        return redirect("/")
+
+        if "patient_email" in session:
+            del session["patient_email"]
+        flash("You're signed out!")
+        return redirect("/")
 
 
 @app.route("/patient-registration")

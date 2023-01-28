@@ -53,10 +53,6 @@ def create_doctor_availability(doctor, datetime):
     doctoravailability = DoctorAvailability(doctor=doctor, datetime=datetime)
     return doctoravailability
 
-# def get_specialty(specialty_name):
-#      return Specialty.query.filter
-# TODO FINISH GETTING SPECIALTIES NAMES FROM SPECIALTY TABLE
-
 
 def create_doctor_insurance(doctor, insurance_name):
 
@@ -69,23 +65,26 @@ def create_doctor_specialty(doctor, specialty_name):
 
 
 def get_doctor_with_criteria(specialties, insurance):
-    matching_doctors = []
+
+    matching_doctors = set()
     all_doctors = Doctor.query.all()
 
-    doctors_with_selected_insurance = []
+    doctors_with_selected_insurance = set()
 
     for doctor in all_doctors:
 
         for doctor_insurance in doctor.doctorinsurances:
             if doctor_insurance.insurance_name == insurance:
-                doctors_with_selected_insurance.append(doctor)
+                doctors_with_selected_insurance.add(doctor)
 
     for doctor in doctors_with_selected_insurance:
-        doctors_specialty_names = []
+        doctors_specialty_names = set()
         for specialty in doctor.doctorspecialties:
-            doctors_specialty_names.append(specialty.specialty_name)
-        if (set(specialties) <= set(doctors_specialty_names)):
-            matching_doctors.append(doctor)
+            doctors_specialty_names.add(specialty.specialty_name)
+        if set(specialties) <= doctors_specialty_names:
+            matching_doctors.add(doctor)
+
+    # TODO get disatances for all doctors in matching_doctors, then return a list sorted by distance
 
     return matching_doctors
 

@@ -3,8 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-# what do i need fstring for in the return???
-
 
 class Patient(db.Model):
     """Data model for patients"""
@@ -15,7 +13,7 @@ class Patient(db.Model):
     last_name = db.Column(db.String(30))
     phone = db.Column(db.String(30))
     address = db.Column(db.String(100))
-    # add lat long floats
+
     lat = db.Column(db.Float, nullable=True)
     long = db.Column(db.Float, nullable=True)
     email = db.Column(db.String(50))
@@ -37,7 +35,6 @@ class Doctor(db.Model):
     first_name = db.Column(db.String(30))
     last_name = db.Column(db.String(30))
     address = db.Column(db.String(100))
-    # add lat long floats
     lat = db.Column(db.Float, nullable=True)
     long = db.Column(db.Float, nullable=True)
     phone = db.Column(db.String(30))
@@ -57,6 +54,12 @@ class Doctor(db.Model):
 
     def __repr__(self):
         return f"<Doctor first_name={self.first_name} last_name={self.last_name} email={self.email}>"
+
+    def getDoctorDataForSearchResult(self):
+
+        # return doctor info plus upcoming availability
+
+        return {'first_name': self.first_name}
 
 
 class Appointment(db.Model):

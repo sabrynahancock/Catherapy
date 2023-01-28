@@ -1,7 +1,7 @@
 """Server for Catherapy app."""
 
-from flask import Flask, render_template, request, flash, session, redirect
-from model import connect_to_db, db
+from flask import Flask, render_template, request, flash, session, redirect, jsonify
+from model import connect_to_db, db, Doctor
 import crud
 from datetime import datetime, timedelta
 from jinja2 import StrictUndefined
@@ -180,25 +180,15 @@ def update_availability_page():
 @app.route("/update-doctor-profile-submit", methods=["POST"])
 def update_doctor_profile():
 
-    #     # doc_id = crud.get_doctor_by_id(doctor_id)
-    #      selected_dates = request.json.get("time_slots")
-    #     # dates = cud.create_doctor_availabilities(date, doctor)
-    #     # db.session.add()
-    #     # logged_in_email = session.get("doctor_email")
     checked_time_slots = request.form.getlist("time_slots")
     print(checked_time_slots)
-#     # #loop through values
-#     # for value in values:
 
     doctor = crud.get_doctor_by_email(session["doctor_email"])
-#     doctor_id = doctor.doctor_id
 
     for datetime in checked_time_slots:
 
         availability = crud.create_doctor_availability(doctor, datetime)
         db.session.add(availability)
-
-    # return redirect("/homepage")
 
     checked_specialties = request.form.getlist("doctor_specialty")
     for specialty in checked_specialties:
@@ -211,8 +201,6 @@ def update_doctor_profile():
     db.session.commit()
 
     return redirect("/homepage")
-#     #create availabily
-#     #get doctor from session
 
 
 @app.route("/search")
@@ -224,12 +212,18 @@ def search():
 @app.route("/search-submit", methods=["POST"])
 def search_submit():
 
-    checked_specialties = request.form.getlist("doctor_specialty")
-    selected_insurance = request.form.get("doctor_insurance")
+    checked_specialties = request.json.get("selectedSpecialties")
+    selected_insurance = request.json.get("selectedInsurance")
+    print(checked_specialties)
     search_results = crud.get_doctor_with_criteria(
         checked_specialties, selected_insurance)
     print(search_results)
-    return render_template("search.html", specialties=SPECIALTIES, insurances=INSURANCES, searchresults=search_results)
+    doctors = []
+    for result in search_results:
+        doctors.append(result.getDoctorDataForSearchResult())
+    return jsonify(
+        doctors=doctors
+    )
 
 
 if __name__ == "__main__":

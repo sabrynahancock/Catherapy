@@ -240,24 +240,31 @@ def save_appt_database():
     
     db.session.add(crud.create_appointment(doctor, patient, datetime))
     db.session.commit()
+    crud.delete_doctor_availability(doctor, datetime)
     return redirect("/homepage")
 
-# @app.route("/show-doctor-appointment", methods=['POST'])
-# def show_doctor_appointments():
+@app.route("/patient-delete-appointment", methods=["POST"])
+def patient_delete_appointment():
 
-#     doctor = crud.get_doctor_by_email(session["doctor_email"])
-#     upcoming_appointments = crud.get_appointment(datetime)
-#     appointments = []
-#     for appointment in upcoming_appointments:
-#         appointments.append(appointment.get_appts_for_doctor())
-#     return 200
+    patient = crud.get_patient_by_email(session["patient_email"])
+    doctor_id = request.form.get("doctor_id")
+    doctor = crud.get_doctor_by_id(doctor_id)
+    datetime = request.form.get("selected_datetime")
 
+    crud.cancel_appointment(doctor, patient, datetime)
+    return redirect("/homepage")
 
+@app.route("/doctor-delete-appointment", methods=["POST"])
+def doctor_delete_appointment():
 
-    
+    doctor = crud.get_doctor_by_email(session["doctor_email"])
+    patient_id = request.form.get("patient_id")
+    patient = crud.get_patient_by_id(patient_id)
+    datetime = request.form.get("selected_datetime")
 
-#     if doctor:
-        
+    crud.cancel_appointment(doctor, patient, datetime)
+
+    return redirect("/homepage")
 
 if __name__ == "__main__":
     connect_to_db(app)

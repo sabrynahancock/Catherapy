@@ -102,11 +102,17 @@ def get_patient_by_id(patient_id):
     """return a doctor by  primary key"""
     return Patient.query.get(patient_id)
 
-#def delete_doctor_availability(doctor, datetime):
+def delete_doctor_availability(doctor, datetime):
 
-    #record = DoctorAvailability.query.
+    record = DoctorAvailability.query.filter(DoctorAvailability.datetime == datetime , DoctorAvailability.doctor_id == doctor.doctor_id).first()
 
-def get_appointment(datetime):
+    db.session.delete(record)
+    db.session.commit()
 
-    uppcoming_appts = Appointment.query.filter(Appointment.datetime == datetime).all()
-    return uppcoming_appts
+def cancel_appointment(doctor, patient, datetime):
+
+    record = Appointment.query.filter(Appointment.datetime == datetime , Appointment.doctor_id == doctor.doctor_id , Appointment.patient_id == patient.patient_id).first()
+    db.session.delete(record)
+    db.session.commit()
+
+

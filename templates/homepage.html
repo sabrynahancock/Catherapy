@@ -10,23 +10,46 @@
 <h1>Welcome {{doctor.first_name}}</h1>
 
 <form action="/doc-logout" method="POST">
-  <p><input type="submit" /></p>
+  <button type="submit" class="btn btn-primary">Logout</button>
+  
 </form>
 <a href="/update-doctor-profile"> Edit Profile</a>
 <div id="doc-appt">
+  {% if doctor.appointments %}
   <h3> Your Upcomming Appointments</h3>
 {% for appointment in doctor.appointments %}
+<form action="/doctor-delete-appointment" method="POST">
+  <input type="hidden" name="patient_id" value="{{appointment.patient.patient_id}}">
+  <input type="hidden" name="selected_datetime" value="{{appointment.datetime}}">
 <p>{{appointment.datetime}}</p>
 <p>{{appointment.patient.first_name}}</p>
+<button type="submit" class="btn btn-primary">Cancel Appointment</button>
+</form>
 {% endfor %}
+{% endif %}
 </div>
 {% elif patient %}
 
 <h1>Welcome {{patient.first_name}}</h1>
 
+<div id="patient-appt">
+  {% if patient.appointments %}
+  <h3> Your Upcomming Appointment</h3>
+{% for appointment in patient.appointments %}
+<form action="/patient-delete-appointment" method="POST">
+  <input type="hidden" name="doctor_id" value="{{appointment.doctor.doctor_id}}">
+  <input type="hidden" name="selected_datetime" value="{{appointment.datetime}}">
+<p>{{appointment.datetime}}</p>
+<p>{{appointment.doctor.first_name}}</p>
+<button type="submit" class="btn btn-primary">Cancel Appointment</button>
+</form>
+{% endfor %}
+{% endif %}
+</div>
 
 <form action="/patient-logout" method="POST">
-  <p><input type="submit" /></p>
+  <button type="submit" class="btn btn-primary">Logout</button>
+  
 </form>
 <a href="/search"> Search for a Specialist</a>
 

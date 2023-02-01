@@ -4,16 +4,29 @@
   <title>Homepage</title>
 </head>
 
-{% block body %} {% if doctor %}
+{% block body %}
+
+{% if doctor %}
 <h1>Welcome {{doctor.first_name}}</h1>
 
-<form action="/logout" method="POST">
+<form action="/doc-logout" method="POST">
   <p><input type="submit" /></p>
 </form>
 <a href="/update-doctor-profile"> Edit Profile</a>
+<div id="doc-appt">
 
+</div>
 {% elif patient %}
 
 <h1>Welcome {{patient.first_name}}</h1>
+
+
+<form action="/patient-logout" method="POST">
+  <p><input type="submit" /></p>
+</form>
 <a href="/search"> Search for a Specialist</a>
-{% endif %} {% endblock %}
+
+{% endif %}
+
+
+{% endblock %}

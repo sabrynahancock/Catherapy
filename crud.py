@@ -84,11 +84,29 @@ def get_doctor_with_criteria(specialties, insurance):
         if set(specialties) <= doctors_specialty_names:
             matching_doctors.add(doctor)
 
-    # TODO get disatances for all doctors in matching_doctors, then return a list sorted by distance
+    # get disatances for all doctors in matching_doctors, then return a list sorted by distance
 
     return matching_doctors
+
+         
+
+def create_appointment(doctor, patient, datetime):
+    return Appointment(doctor=doctor, patient=patient, datetime=datetime)
 
 
 def get_doctor_by_id(doctor_id):
     """return a doctor by  primary key"""
     return Doctor.query.get(doctor_id)
+
+def get_patient_by_id(patient_id):
+    """return a doctor by  primary key"""
+    return Patient.query.get(patient_id)
+
+#def delete_doctor_availability(doctor, datetime):
+
+    #record = DoctorAvailability.query.
+
+def get_appointment(datetime):
+
+    uppcoming_appts = Appointment.query.filter(Appointment.datetime == datetime).all()
+    return uppcoming_appts

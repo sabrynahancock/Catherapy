@@ -58,16 +58,37 @@ class Doctor(db.Model):
     def getDoctorDataForSearchResult(self):
 
         # return doctor info plus upcoming availability
+        specialties = []
+        insurances = []
+        availabilities = []
+        
 
-        return {'first_name': self.first_name}
+        for specialty in self.doctorspecialties:
+            specialties.append(specialty.specialty_name)
+
+        for insurance in self.doctorinsurances:
+            insurances.append(insurance.insurance_name)
+
+        for availability in self.doctoravailabilities:
+            availabilities.append(availability.datetime)
+        
+        # for appointment in self.appointments:
+        #     appointments.append(appointment.datetime)
 
 
+        return {'first_name': self.first_name , 'last_name' : self.last_name, 'address' : self.address , 'phone' : self.phone , 'bio' : self.bio , 'photo' : self.photo_url , 'specialties' :  specialties , 'insurances' : insurances , 'availabilities' : availabilities , 'doctor_id' : self.doctor_id}
+
+    # def get_appts_for_doctor(self):
+    #     appointments = []
+    #     for appointment in self.appointments:
+    #         appointments.append(appointment.datetime)
+
+    #         return {'first_name': self.first_name , 'appointments' : appointments }
 class Appointment(db.Model):
     """Data model for appointments"""
     __tablename__ = "appointments"
 
-    appointment_id = db.Column(
-        db.Integer, primary_key=True, autoincrement=True)
+    appointment_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     doctor_id = db.Column(db.Integer, db.ForeignKey("doctors.doctor_id"))
     patient_id = db.Column(db.Integer, db.ForeignKey("patients.patient_id"))
     datetime = db.Column(db.DateTime)
@@ -77,6 +98,13 @@ class Appointment(db.Model):
 
     def __repr__(self):
         return f"<Appointment date={self.datetime}>"
+    # def get_appt(self):
+    #     appointments = []
+    #     for appointment in self.appointments:
+    #         appointments.append(appointment.datetime)
+            
+    #     return {'appointments' : appointments}
+
 
 
 class PatientFeeling(db.Model):
@@ -135,6 +163,7 @@ class DoctorAvailability(db.Model):
 
     def __repr__(self):
         return f"<DoctorAvailability date={self.datetime}>"
+
 
 
 def connect_to_db(app):

@@ -63,13 +63,16 @@ def login():
         return redirect("/")
 
 
-@app.route("/logout", methods=['POST'])
-def logout():
+@app.route("/doc-logout", methods=['POST'])
+def doctor_logout():
     if "doctor_email" in session:
         del session["doctor_email"]
     flash("You're signed out!")
     return redirect("/")
 
+
+@app.route("/patient-logout", methods=['POST'])
+def patient_logout():
     if "patient_email" in session:
         del session["patient_email"]
     flash("You're signed out!")
@@ -181,7 +184,7 @@ def update_availability_page():
 def update_doctor_profile():
 
     checked_time_slots = request.form.getlist("time_slots")
-    print(checked_time_slots)
+    
 
     doctor = crud.get_doctor_by_email(session["doctor_email"])
 
@@ -214,17 +217,47 @@ def search_submit():
 
     checked_specialties = request.json.get("selectedSpecialties")
     selected_insurance = request.json.get("selectedInsurance")
-    print(checked_specialties)
+    
     search_results = crud.get_doctor_with_criteria(
         checked_specialties, selected_insurance)
-    print(search_results)
+    
     doctors = []
     for result in search_results:
         doctors.append(result.getDoctorDataForSearchResult())
     return jsonify(
         doctors=doctors
     )
+@app.route("/save-appt-database", methods=["POST"])
+def save_appt_database():
 
+
+    doctor_id = request.form.get("doctor_id")
+    doctor = crud.get_doctor_by_id(doctor_id)
+    patient = crud.get_patient_by_email(session["patient_email"])
+    
+    datetime = request.form.get("selected_availability")
+    
+    
+    db.session.add(crud.create_appointment(doctor, patient, datetime))
+    db.session.commit()
+    return redirect("/homepage")
+
+# @app.route("/show-doctor-appointment", methods=['POST'])
+# def show_doctor_appointments():
+
+#     doctor = crud.get_doctor_by_email(session["doctor_email"])
+#     upcoming_appointments = crud.get_appointment(datetime)
+#     appointments = []
+#     for appointment in upcoming_appointments:
+#         appointments.append(appointment.get_appts_for_doctor())
+#     return 200
+
+
+
+    
+
+#     if doctor:
+        
 
 if __name__ == "__main__":
     connect_to_db(app)

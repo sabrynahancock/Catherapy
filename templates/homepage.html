@@ -14,7 +14,11 @@
 </form>
 <a href="/update-doctor-profile"> Edit Profile</a>
 <div id="doc-appt">
-
+  <h3> Your Upcomming Appointments</h3>
+{% for appointment in doctor.appointments %}
+<p>{{appointment.datetime}}</p>
+<p>{{appointment.patient.first_name}}</p>
+{% endfor %}
 </div>
 {% elif patient %}
 

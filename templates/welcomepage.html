@@ -2,30 +2,35 @@
 {% block title %} Catherapy {% endblock %}
 
 {% block body %}
+<div class="ms-3">
+    <br/> 
     <h1> Welcome to Catherapy!</h1>
 
-    <h2> Log In </h2>
+
     <form action="/login" method="POST">
-        <p> Email <input type="text" name="email">
-        </p>
+          <label for="exampleInputEmail1" class="form-label">Email address</label>
+          <div class="col-md-3">
+            <input type="email" name="email" class="form-control">
+            </div>
 
-        <p>
-            Password <input type="password" name="password">
-        </p>
-        {% with messages = get_flashed_messages() %} 
-        {% if messages %}
-            {% for message in messages %}
-                {{ message }}
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        <p> <input type="submit">
-        </p>
-
-    </form>
-
+    
+          <label for="exampleInputPassword1" class="form-label">Password</label>
+          <div class="col-md-3">
+          <input type="password" name="password" class="form-control">
+          </div>
+        
+        <div id="emailHelp" class="form-text">{% with messages = get_flashed_messages() %} 
+            {% if messages %}
+                {% for message in messages %}
+                    {{ message }}
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}</div>
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
     <ul>
         <li><a href="/patient-registration"> Register as a Patient</a></li>
         <li><a href="/doctor-registration"> Register as a Doctor</a></li>
     </ul>
+    </div>
 {% endblock %}

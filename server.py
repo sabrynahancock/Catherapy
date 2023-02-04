@@ -5,10 +5,13 @@ from model import connect_to_db, db, Doctor
 import crud
 from datetime import datetime, timedelta
 from jinja2 import StrictUndefined
+from geopy import distance
 
 app = Flask(__name__)
 app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined
+
+#add docstrings
 
 
 @app.route("/")
@@ -37,7 +40,7 @@ def home_page():
 
     return render_template("homepage.html", doctor=doctor, patient=patient)
 
-# need to work on homepage for doctors page
+
 
 
 @app.route("/login", methods=['POST'])
@@ -215,15 +218,19 @@ def search():
 @app.route("/search-submit", methods=["POST"])
 def search_submit():
 
+    patient = crud.get_patient_by_email(session["patient_email"])
     checked_specialties = request.json.get("selectedSpecialties")
     selected_insurance = request.json.get("selectedInsurance")
     
     search_results = crud.get_doctor_with_criteria(
         checked_specialties, selected_insurance)
-    
+    doctor_dict = {}
     doctors = []
-    for result in search_results:
-        doctors.append(result.getDoctorDataForSearchResult())
+    for doctor in search_results:
+        distance_from_patient = calculate_distance((doctor.lat, doctor.long) , (patient.lat, patient.long))
+        doctors.append(doctor.get_doctor_data_for_search_result(distance_from_patient))
+    doctors.sort(key=lambda doctor: doctor['distance_from_patient'])
+
     return jsonify(
         doctors=doctors
     )
@@ -265,6 +272,12 @@ def doctor_delete_appointment():
     crud.cancel_appointment(doctor, patient, datetime)
 
     return redirect("/homepage")
+
+def calculate_distance(doctor, patient):
+
+    dist = distance.distance(doctor , patient).miles
+    
+    return round(dist, 1)
 
 if __name__ == "__main__":
     connect_to_db(app)

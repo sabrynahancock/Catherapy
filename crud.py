@@ -3,10 +3,11 @@
 from model import db, Patient, Doctor, Appointment, PatientFeeling, DoctorSpecialty, DoctorInsurance, DoctorAvailability, connect_to_db
 from geopy.geocoders import Nominatim
 
-# do i need to pass lat and long here?
 
+# add docstrigns on each function 
 
 def create_patient(first_name, last_name, phone, address, email, password):
+    """Creates a Patient"""
     lat_long = get_lat_long(address)
     lat = lat_long[0]
     long = lat_long[1]
@@ -17,10 +18,12 @@ def create_patient(first_name, last_name, phone, address, email, password):
 
 
 def get_patient_by_email(email):
+    """Get patient by email"""
     return Patient.query.filter(Patient.email == email).first()
 
 
 def create_doctor(first_name, last_name, address, phone, photo_url, bio, email, password, gender):
+    """Creates a doctor"""
     lat_long = get_lat_long(address)
     lat = lat_long[0]
     long = lat_long[1]
@@ -31,6 +34,7 @@ def create_doctor(first_name, last_name, address, phone, photo_url, bio, email, 
 
 
 def get_doctor_by_email(email):
+    """Get a doctor by email"""
     return Doctor.query.filter(Doctor.email == email).first()
 
 
@@ -43,7 +47,7 @@ def get_lat_long(address):
     geolocator = Nominatim(user_agent="catherapy")
     location = geolocator.geocode(address)
 
-    # print((location.latitude, location.longitude))
+
 
     return (location.raw['lat'], location.raw['lon'])
 
@@ -84,12 +88,12 @@ def get_doctor_with_criteria(specialties, insurance):
         if set(specialties) <= doctors_specialty_names:
             matching_doctors.add(doctor)
 
-    # get disatances for all doctors in matching_doctors, then return a list sorted by distance
+    # print(calculate_distance(matching_doctors[0], patient))
+
 
     return matching_doctors
 
          
-
 def create_appointment(doctor, patient, datetime):
     return Appointment(doctor=doctor, patient=patient, datetime=datetime)
 
@@ -114,5 +118,18 @@ def cancel_appointment(doctor, patient, datetime):
     record = Appointment.query.filter(Appointment.datetime == datetime , Appointment.doctor_id == doctor.doctor_id , Appointment.patient_id == patient.patient_id).first()
     db.session.delete(record)
     db.session.commit()
+
+
+# def get_doctor_lat_long(doctor):
+
+#     return Doctor.query.filter(Doctor.lat == lat , Doctor.long == long).first()
+
+
+# def get_patient_lat_long(patient):
+
+#     return Patient.query.filter(Patient.lat == lat , Patient.long == long).first()
+
+# def calculate_distance(doctor, patient):
+
 
 

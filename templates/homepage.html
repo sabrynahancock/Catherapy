@@ -7,53 +7,93 @@
 {% block body %}
 
 {% if doctor %}
-<h1>Welcome {{doctor.first_name}}</h1>
-
-<form action="/doc-logout" method="POST">
-  <button type="submit" class="btn btn-primary">Logout</button>
+<nav class="navbar navbar-light" style="background-color: #922e00e8;">
+  <a class="navbar-brand" href="#">
+    <img src="../static/img/logo.jpeg" width="30" height="30" class="d-inline-block align-top" alt="">
+    Catherapy
+  </a>
   
-</form>
-<a href="/update-doctor-profile"> Edit Profile</a>
-<div id="doc-appt">
-  {% if doctor.appointments %}
-  <h3> Your Upcomming Appointments</h3>
-{% for appointment in doctor.appointments %}
-<form action="/doctor-delete-appointment" method="POST">
-  <input type="hidden" name="patient_id" value="{{appointment.patient.patient_id}}">
-  <input type="hidden" name="selected_datetime" value="{{appointment.datetime}}">
-<p>{{appointment.datetime}}</p>
-<p>{{appointment.patient.first_name}}</p>
-<button type="submit" class="btn btn-primary">Cancel Appointment</button>
-</form>
-{% endfor %}
-{% endif %}
-</div>
-{% elif patient %}
-
-<h1>Welcome {{patient.first_name}}</h1>
-
-<div id="patient-appt">
-  {% if patient.appointments %}
-  <h3> Your Upcomming Appointment</h3>
-{% for appointment in patient.appointments %}
-<form action="/patient-delete-appointment" method="POST">
-  <input type="hidden" name="doctor_id" value="{{appointment.doctor.doctor_id}}">
-  <input type="hidden" name="selected_datetime" value="{{appointment.datetime}}">
-<p>{{appointment.datetime}}</p>
-<p>{{appointment.doctor.first_name}}</p>
-<button type="submit" class="btn btn-primary">Cancel Appointment</button>
-</form>
-{% endfor %}
-{% endif %}
-</div>
-
-<form action="/patient-logout" method="POST">
-  <button type="submit" class="btn btn-primary">Logout</button>
   
-</form>
-<a href="/search"> Search for a Specialist</a>
+  <a class="nav-link" href="/update-doctor-profile"> Edit Profile</a>
+
+  <form action="/doc-logout" method="POST" class="form-inline">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+  </form>
+</nav>
+
+<div class="ms-3">
+    <h1>Welcome {{doctor.first_name}}</h1>
+
+
+    <div id="doc-appt">
+      {% if doctor.appointments %}
+      <h3> Your Upcoming Appointments</h3>
+      {% for appointment in doctor.appointments %}
+      <form action="/doctor-delete-appointment" method="POST">
+        <input type="hidden" name="patient_id" value="{{appointment.patient.patient_id}}">
+        <input type="hidden" name="selected_datetime" value="{{appointment.datetime}}">
+        <p>{{appointment.datetime}}</p>
+        <p>{{appointment.patient.first_name}}</p>
+        <button type="submit" class="btn btn-primary">Cancel Appointment</button>
+      </form>
+      {% endfor %}
+      {% endif %}
+    </div>
+    {% elif patient %}
+    <nav class="navbar navbar-light" style="background-color: #ad4e22e8;">
+      <a class="navbar-brand" href="#">
+        <img src="../static/img/logo.jpeg" width="30" height="30" class="d-inline-block align-top" alt="">
+        Catherapy
+      </a>
+      <a class="nav-link" href="/search"> Search for a Specialist</a>
+      <form action="/patient-logout" method="POST" class="form-inline">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+      </form>
+    </nav>
+  </div>
+
+  <div class="ms-3">
+  <h1>Welcome {{patient.first_name}}</h1>
+
+  <div id="patient-appt">
+    {% if patient.appointments %}
+    {% for appointment in patient.appointments %}
+    
+    <form action="/patient-delete-appointment" method="POST">
+
+
+      <div class="card mb-3" style="max-width: 600px;">
+        <div class="row no-gutters">
+          <div class="col-md-4 my-auto">
+            <img src="{{appointment.doctor.photo_url}}"  class="card-img ms-2" alt="...">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">Your next Pawsome appointment info</h5>
+              <ul class="list-group">
+                <li class="list-group-item"><i class="fa-regular fa-calendar fa-fw me-4"></i>Date: {{appointment.datetime.strftime('%a %b %d')}} </li>
+                <li class="list-group-item"><i class="fa-regular fa-clock fa-fw me-4"></i>Time: {{appointment.datetime.strftime('%I:%M %p')}} </li>
+                <li class="list-group-item"><i class="fa-solid fa-map-pin fa-fw me-4"></i>Where: {{appointment.doctor.address}}</li>
+                <li class="list-group-item"><i class="fa-regular fa-user fa-fw me-4"></i>With: {{appointment.doctor.first_name}} {{appointment.doctor.last_name}}</li>
+              </ul>
+              <button type="submit" class="btn btn-primary mt-2" style="background-color: hsla(39, 91%, 57%, 0.973);">Cancel Appointment</button>
+              </div>
+            </div>
+        </div>
+      </div>
+
+      <input type="hidden" name="doctor_id" value="{{appointment.doctor.doctor_id}}">
+      <input type="hidden" name="selected_datetime" value="{{appointment.datetime}}">
+
+
+    </form>
+    {% endfor %}
+    {% endif %}
+  </div>
+</div>
+</div>
+
 
 {% endif %}
-
-
+<script src="https://kit.fontawesome.com/54fd98ac47.js" crossorigin="anonymous"></script>
 {% endblock %}

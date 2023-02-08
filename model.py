@@ -74,7 +74,7 @@ class Doctor(db.Model):
         
 
 
-        return {'first_name': self.first_name , 'last_name' : self.last_name, 'address' : self.address , 'phone' : self.phone , 'bio' : self.bio , 'photo' : self.photo_url , 'specialties' :  specialties , 'insurances' : insurances , 'availabilities' : availabilities , 'doctor_id' : self.doctor_id, 'distance_from_patient': distance_from_patient}
+        return {'first_name': self.first_name , 'last_name' : self.last_name, 'address' : self.address , 'phone' : self.phone , 'bio' : self.bio , 'photo' : self.photo_url , 'specialties' :  specialties , 'insurances' : insurances , 'availabilities' : availabilities , 'doctor_id' : self.doctor_id, 'distance_from_patient': distance_from_patient, 'lat': self.lat, 'long' : self.long}
 
 
 class Appointment(db.Model):

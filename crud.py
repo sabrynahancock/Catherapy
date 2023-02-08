@@ -119,6 +119,21 @@ def cancel_appointment(doctor, patient, datetime):
     db.session.delete(record)
     db.session.commit()
 
+def delete_all_doctor_availabilities(doctor):
+    delete_q = DoctorAvailability.__table__.delete().where(DoctorAvailability.doctor_id == doctor.doctor_id)
+    db.session.execute(delete_q)
+    db.session.commit()
+
+def delete_all_doctor_specialties(doctor):
+    delete_q = DoctorSpecialty.__table__.delete().where(DoctorSpecialty.doctor_id == doctor.doctor_id)
+    db.session.execute(delete_q)
+    db.session.commit()
+
+def delete_all_doctor_insurances(doctor):
+    delete_q = DoctorInsurance.__table__.delete().where(DoctorInsurance.doctor_id == doctor.doctor_id)
+    db.session.execute(delete_q)
+    db.session.commit()
+ 
 
 # def get_doctor_lat_long(doctor):
 

@@ -186,13 +186,14 @@ def update_availability_page():
 @app.route("/update-doctor-profile-submit", methods=["POST"])
 def update_doctor_profile():
 
-    checked_time_slots = request.form.getlist("time_slots")
-    
 
     doctor = crud.get_doctor_by_email(session["doctor_email"])
+    crud.delete_all_doctor_availabilities(doctor)
+    crud.delete_all_doctor_specialties(doctor)
+    crud.delete_all_doctor_insurances(doctor)
 
+    checked_time_slots = request.form.getlist("time_slots")
     for datetime in checked_time_slots:
-
         availability = crud.create_doctor_availability(doctor, datetime)
         db.session.add(availability)
 

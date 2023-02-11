@@ -38,7 +38,7 @@ def home_page():
     if "doctor_email" in session:
         doctor = crud.get_doctor_by_email(session["doctor_email"])
 
-    return render_template("homepage.html", doctor=doctor, patient=patient)
+    return render_template("homepage.html", doctor=doctor, patient=patient, has_patient_submitted_feeling_today=has_patient_submitted_feeling_today())
 
 
 
@@ -279,6 +279,41 @@ def calculate_distance(doctor, patient):
     dist = distance.distance(doctor , patient).miles
     
     return round(dist, 1)
+
+@app.route("/add-patient-feeling-submit", methods=["POST"])
+def add_patient_feeling_submit():
+    patient = crud.get_patient_by_email(session["patient_email"])
+    feeling_rating = request.form.get("feeling_rating")
+    feeling_comment = request.form.get("feeling_comment")
+    current_datetime = datetime.now()
+
+    db.session.add(crud.add_patient_feeling(patient, feeling_rating, feeling_comment, current_datetime))
+    db.session.commit()
+
+    return redirect("/homepage")
+
+def has_patient_submitted_feeling_today():
+    if "patient_email" in session:
+        patient = crud.get_patient_by_email(session["patient_email"])
+    else:
+        return False
+
+    has_patient_submitted_feeling_today = False
+    for patient_feeling in patient.patientfeelings:
+        if patient_feeling.datetime.date() == datetime.today().date():
+            has_patient_submitted_feeling_today = True
+    # return has_patient_submitted_feeling_today
+    return False
+
+@app.route("/mood-tracker")
+def mood_tracker_page():
+    patient = None
+
+
+    if "patient_email" in session:
+        patient = crud.get_patient_by_email(session["patient_email"])
+
+    return render_template("mood-tracker.html", patient=patient)
 
 if __name__ == "__main__":
     connect_to_db(app)

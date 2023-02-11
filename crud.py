@@ -134,6 +134,10 @@ def delete_all_doctor_insurances(doctor):
     db.session.execute(delete_q)
     db.session.commit()
  
+def add_patient_feeling(patient, feeling_rating, feeling_comment, datetime):
+    return PatientFeeling(patient=patient, feeling_rating=feeling_rating, feeling_comment=feeling_comment, datetime=datetime)
+    
+
 
 # def get_doctor_lat_long(doctor):
 

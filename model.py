@@ -26,6 +26,10 @@ class Patient(db.Model):
     def __repr__(self):
         return f"<Patient first_name={self.first_name} last_name={self.last_name} email={self.email}"
 
+    # def get_patient_feelings(self):
+
+
+    #     return {'': self.first_name }
 
 class Doctor(db.Model):
     """Data model for doctors"""

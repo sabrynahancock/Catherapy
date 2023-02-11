@@ -24,7 +24,6 @@
 <div class="ms-3">
     <h1>Welcome {{doctor.first_name}}</h1>
 
-
     <div id="doc-appt">
       {% if doctor.appointments %}
       <h3> Your Upcoming Appointments</h3>
@@ -39,6 +38,7 @@
       {% endfor %}
       {% endif %}
     </div>
+
     {% elif patient %}
     <nav class="navbar navbar-light" style="background-color: #ad4e22e8;">
       <a class="navbar-brand" href="#">
@@ -46,6 +46,7 @@
         Catherapy
       </a>
       <a class="nav-link" href="/search"> Search for a Specialist</a>
+      <a class="nav-link" href="/mood-tracker"> Mood Tracker</a>
       <form action="/patient-logout" method="POST" class="form-inline">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
       </form>
@@ -60,8 +61,6 @@
     {% for appointment in patient.appointments %}
     
     <form action="/patient-delete-appointment" method="POST">
-
-
       <div class="card mb-3" style="max-width: 600px;">
         <div class="row no-gutters">
           <div class="col-md-4 my-auto">
@@ -90,10 +89,59 @@
     {% endfor %}
     {% endif %}
   </div>
+
+  {% if not has_patient_submitted_feeling_today %}
+  <div id="patient-feelings">
+    <H3>How are you feeling today?</H3>
+    <form action="/add-patient-feeling-submit" method="post">
+      <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+        <input type="radio" class="btn-check" name="feeling_rating" value="1" id="btnradio1" autocomplete="off">
+        <label class="btn btn-outline-primary" for="btnradio1">😀</label>
+      
+        <input type="radio" class="btn-check" name="feeling_rating" value="2" id="btnradio2" autocomplete="off">
+        <label class="btn btn-outline-primary" for="btnradio2">🤪</label>
+      
+        <input type="radio" class="btn-check" name="feeling_rating" value="3" id="btnradio3" autocomplete="off">
+        <label class="btn btn-outline-primary" for="btnradio3">🤬</label>
+
+        <input type="radio" class="btn-check" name="feeling_rating" value="4" id="btnradio4" autocomplete="off">
+        <label class="btn btn-outline-primary" for="btnradio4">😞</label>
+      </div>
+      <!-- <input
+        type="radio"
+        name="feeling_rating"
+        value="1"
+      />
+      😀
+      <input
+      type="radio"
+      name="feeling_rating"
+      value="2"
+    />
+    🤪
+    <input
+      type="radio"
+      name="feeling_rating"
+      value="3"
+    />
+    🤬
+    <input
+      type="radio"
+      name="feeling_rating"
+      value="2"
+    />
+    😞 -->
+
+    <p><label for="feeling_comment">Would you like to add a comment?</label></p>
+    <textarea name="feeling_comment" rows="4" cols="50"> </textarea>
+      <div>
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+  </div>
+  {% endif %}
 </div>
 </div>
-
-
 {% endif %}
 <script src="https://kit.fontawesome.com/54fd98ac47.js" crossorigin="anonymous"></script>
 {% endblock %}

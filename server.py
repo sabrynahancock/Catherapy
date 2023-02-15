@@ -73,7 +73,7 @@ def login():
         return redirect("/")
 
 
-@app.route("/doc-logout", methods=['POST'])
+@app.route("/doc-logout")
 def doctor_logout():
     if "doctor_email" in session:
         del session["doctor_email"]

@@ -137,7 +137,8 @@ def delete_all_doctor_insurances(doctor):
 def add_patient_feeling(patient, feeling_rating, feeling_comment, datetime):
     return PatientFeeling(patient=patient, feeling_rating=feeling_rating, feeling_comment=feeling_comment, datetime=datetime)
     
-
+def get_patient_feeling_rating(patient_id):
+    return PatientFeeling.query.filter_by(patient_id=patient_id).all()
 
 # def get_doctor_lat_long(doctor):
 

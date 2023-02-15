@@ -6,6 +6,12 @@ import crud
 from datetime import datetime, timedelta
 from jinja2 import StrictUndefined
 from geopy import distance
+import cloudinary.uploader
+import os
+
+CLOUDINARY_KEY = os.environ['CLOUDINARY_KEY']
+CLOUDINARY_SECRET= os.environ['CLOUDINARY_SECRET']      
+CLOUD_NAME = "dvdpiblk8"  
 
 app = Flask(__name__)
 app.secret_key = "dev"
@@ -34,11 +40,12 @@ def home_page():
 
     if "patient_email" in session:
         patient = crud.get_patient_by_email(session["patient_email"])
+        return render_template("homepage.html", patient=patient, has_patient_submitted_feeling_today=has_patient_submitted_feeling_today())
 
     if "doctor_email" in session:
         doctor = crud.get_doctor_by_email(session["doctor_email"])
+        return render_template("doctor-homepage.html", doctor=doctor)
 
-    return render_template("homepage.html", doctor=doctor, patient=patient, has_patient_submitted_feeling_today=has_patient_submitted_feeling_today())
 
 
 
@@ -74,7 +81,7 @@ def doctor_logout():
     return redirect("/")
 
 
-@app.route("/patient-logout", methods=['POST'])
+@app.route("/patient-logout")
 def patient_logout():
     if "patient_email" in session:
         del session["patient_email"]
@@ -129,12 +136,14 @@ def doctor_registration_submit():
     last_name = request.form.get("last_name")
     address = request.form.get("address")
     phone = request.form.get("phone")
-    photo_url = request.form.get("photo_url")
     bio = request.form.get("bio")
     email = request.form.get("email")
     password = request.form.get("password")
     gender = request.form.get("gender")
 
+    img_file = request.files["file_input"]
+    result = cloudinary.uploader.upload(img_file,api_key=CLOUDINARY_KEY, api_secret=CLOUDINARY_SECRET,cloud_name=CLOUD_NAME)
+    img_url = result['secure_url']
     doctor = crud.get_doctor_by_email(email)
 
     if doctor:
@@ -143,7 +152,7 @@ def doctor_registration_submit():
 
     else:
         doctor = crud.create_doctor(
-            first_name, last_name, address, phone, photo_url, bio, email, password, gender)
+            first_name, last_name, address, phone, img_url, bio, email, password, gender)
 
         db.session.add(doctor)
         db.session.commit()
@@ -272,7 +281,7 @@ def doctor_delete_appointment():
 
     crud.cancel_appointment(doctor, patient, datetime)
 
-    return redirect("/homepage")
+    return jsonify({'doctor' : doctor.get_doctor_data_for_homepage()})
 
 def calculate_distance(doctor, patient):
 
@@ -302,7 +311,7 @@ def has_patient_submitted_feeling_today():
     for patient_feeling in patient.patientfeelings:
         if patient_feeling.datetime.date() == datetime.today().date():
             has_patient_submitted_feeling_today = True
-    # return has_patient_submitted_feeling_today
+    return has_patient_submitted_feeling_today
     return False
 
 @app.route("/mood-tracker")
@@ -314,6 +323,25 @@ def mood_tracker_page():
         patient = crud.get_patient_by_email(session["patient_email"])
 
     return render_template("mood-tracker.html", patient=patient)
+
+@app.route('/feelings', methods=['GET'])
+def get_feelings():
+    patient = crud.get_patient_by_email(session["patient_email"])
+    feelings = crud.get_patient_feeling_rating(patient.patient_id)
+    feelings_list = []
+    for feeling in feelings:
+        feelings_list.append(feeling.feeling_rating)
+
+    return jsonify({'ratings' : feelings_list})
+
+
+@app.route('/doctor-data.json', methods=['GET'])
+def get_doctor_data_json():
+
+    doctor = crud.get_doctor_by_email(session["doctor_email"])
+
+    return jsonify({'doctor' : doctor.get_doctor_data_for_homepage()})
+
 
 if __name__ == "__main__":
     connect_to_db(app)

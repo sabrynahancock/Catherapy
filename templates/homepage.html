@@ -14,83 +14,95 @@
   }
 
   .btn-primary {
-  border-color: black;
-}
-.btn-check:checked + .btn-outline-primary i {
-  color: white;
-}
+    border-color: black;
+  }
 
-.btn-check:checked + .btn-outline-primary {
-  background-color: black;
-  border-color: black;
-  color: white;
-}
+  .btn-check:checked+.btn-outline-primary i {
+    color: white;
+  }
 
-.btn-outline-primary {
-  color: black;
-  border-color: black;
-}
+  .btn-check:checked+.btn-outline-primary {
+    background-color: black;
+    border-color: black;
+    color: white;
+  }
 
-.btn-check {
-  display: none;
-}
+  .btn-outline-primary {
+    color: black;
+    border-color: black;
+  }
 
-.btn-outline-primary:hover {
-  color: #000000;
-  background-color: #69747f;
-  border-color: #506172;
-}
+  .btn-check {
+    display: none;
+  }
 
-.btn-outline-primary:active, .btn-outline-primary.active {
-  color: #fff;
-  background-color: #343a40;
-  border-color: #343a40;
-}
-.btn-check:focus + .btn-outline-primary {
-  outline: 0;
-  box-shadow: none !important;
-  background-color: #69747f;
-  border-color: #506172;
-  color: #000;
+  .btn-outline-primary:hover {
+    color: #000000;
+    background-color: #69747f;
+    border-color: #506172;
+  }
+
+  .btn-outline-primary:active,
+  .btn-outline-primary.active {
+    color: #fff;
+    background-color: #343a40;
+    border-color: #343a40;
+  }
+
+  .btn-check:focus+.btn-outline-primary {
+    outline: 0;
+    box-shadow: none !important;
+    background-color: #69747f;
+    border-color: #506172;
+    color: #000;
+  }
+
+  .navbar-nav {
+    margin-left: auto;
+  }
+
+  .dropdown-menu {
+  right: 0;
+  left: auto;
+  width: 200px;
 }
 </style>
 <!-- trying to remove the blue click on buttons for feelings emojis -->
-<!-- also tyring to fix the navbar dropdowns - needs to be to the right -->
-<!-- navbar in search changes color even with the same code -->
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/homepage">Catherapy</a>
+    <a class="navbar-brand mr-auto" href="/homepage">Catherapy</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
-    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
+      aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
-      <ul class="navbar-nav">
-        <li class="nav-item dropdown">
-          
+      <ul class="navbar-nav ml-auto">
+
+        <li class="nav-item dropdown position-static">
+
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false"><i class="bi bi-balloon-heart"></i>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="/search">Search</a>
-          <a class="dropdown-item" href="/mood-tracker">Mood Tracker</a>
-          <a class="dropdown-item" href="/adopt">Adopt a Cat</a>
-          <a class="dropdown-item" name="/patient-logout" href="/patient-logout"><strong>Log Out</strong></a>
-        </div>
-      </li>
-    </ul>
-  </div>
+            aria-haspopup="true" aria-expanded="false"><i class="bi bi-balloon-heart"></i>
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="/search">Find Help</a>
+            <a class="dropdown-item" href="/mood-tracker">Mood Tracker</a>
+            <a class="dropdown-item" href="/adopt">Adopt a Cat</a>
+            <a class="dropdown-item" name="/patient-logout" href="/patient-logout"><strong>Log Out</strong></a>
+          </div>
+        </li>
+      </ul>
+    </div>
 </nav>
 </br>
 <div class="text-center">
-  <h1>Welcome {{patient.first_name}}</h1>
   {% if not has_patient_submitted_feeling_today %}
+  <h1>Welcome {{patient.first_name}}</h1>
   <H3>How are you feeling today?</H3>
   <form action="/add-patient-feeling-submit" method="post">
-    <div class="btn-group"       role="group">
-      <input type="radio" class="btn-check"  name="feeling_rating" value="1" id="btnradio1" autocomplete="off">
+    <div class="btn-group" role="group">
+      <input type="radio" class="btn-check" name="feeling_rating" value="1" id="btnradio1" autocomplete="off">
       <label class="btn btn-outline-primary btn-lg" for="btnradio1"><i class="bi bi-emoji-smile"></i></label>
 
       <input type="radio" class="btn-check" name="feeling_rating" value="2" id="btnradio2" autocomplete="off">
@@ -112,40 +124,41 @@
 </div>
 
 <div class="ms-3">
-<div id="patient-appt">
+  <div id="patient-appt">
 
 
-  {% if patient.appointments %}
-  {% for appointment in patient.appointments %}
+    {% if patient.appointments %}
+    {% for appointment in patient.appointments %}
 
-  <form action="/patient-delete-appointment" method="POST">
-    <div class="card mb-3" style="max-width: 600px;">
-      <div class="row no-gutters">
-        <div class="col-md-4 my-auto">
-          <img src="{{appointment.doctor.photo_url}}" class="card-img ms-2" alt="...">
-        </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title">Your next Pawsome appointment info</h5>
-            <ul class="list-group">
-              <li class="list-group-item"><i class="fa-regular fa-calendar fa-fw me-4"></i>Date:
-                {{appointment.datetime.strftime('%a %b %d')}} </li>
-              <li class="list-group-item"><i class="fa-regular fa-clock fa-fw me-4"></i>Time:
-                {{appointment.datetime.strftime('%I:%M %p')}} </li>
-              <li class="list-group-item"><i class="fa-solid fa-map-pin fa-fw me-4"></i>Where:
-                {{appointment.doctor.address}}</li>
-              <li class="list-group-item"><i class="fa-regular fa-user fa-fw me-4"></i>With:
-                {{appointment.doctor.first_name}} {{appointment.doctor.last_name}}</li>
-            </ul>
-            <button type="submit" class="btn btn-primary mt-2" style="background-color :hsla(0, 11%, 7%, 0.992);">Cancel
-              Appointment</button>
+    <form action="/patient-delete-appointment" method="POST">
+      <div class="card mb-3" style="max-width: 600px;">
+        <div class="row no-gutters">
+          <div class="col-md-4 my-auto">
+            <img src="{{appointment.doctor.photo_url}}" class="card-img ms-2" alt="...">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">Your next Pawsome appointment info</h5>
+              <ul class="list-group">
+                <li class="list-group-item"><i class="fa-regular fa-calendar fa-fw me-4"></i>Date:
+                  {{appointment.datetime.strftime('%a %b %d')}} </li>
+                <li class="list-group-item"><i class="fa-regular fa-clock fa-fw me-4"></i>Time:
+                  {{appointment.datetime.strftime('%I:%M %p')}} </li>
+                <li class="list-group-item"><i class="fa-solid fa-map-pin fa-fw me-4"></i>Where:
+                  {{appointment.doctor.address}}</li>
+                <li class="list-group-item"><i class="fa-regular fa-user fa-fw me-4"></i>With:
+                  {{appointment.doctor.first_name}} {{appointment.doctor.last_name}}</li>
+              </ul>
+              <button type="submit" class="btn btn-primary mt-2"
+                style="background-color :hsla(0, 11%, 7%, 0.992);">Cancel
+                Appointment</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
   </div>
-    <input type="hidden" name="doctor_id" value="{{appointment.doctor.doctor_id}}">
-    <input type="hidden" name="selected_datetime" value="{{appointment.datetime}}">
+  <input type="hidden" name="doctor_id" value="{{appointment.doctor.doctor_id}}">
+  <input type="hidden" name="selected_datetime" value="{{appointment.datetime}}">
 
 
   </form>

@@ -343,9 +343,14 @@ def get_doctor_data_json():
     return jsonify({'doctor' : doctor.get_doctor_data_for_homepage()})
 
 @app.route('/about')
-def about_catherapy():
+def about_catherapy_template():
 
     return render_template("about.html")
+
+@app.route('/adopt')
+def adopt_template():
+
+    return render_template("adopt.html")
 
 
 if __name__ == "__main__":

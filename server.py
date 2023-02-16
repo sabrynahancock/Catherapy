@@ -311,7 +311,7 @@ def has_patient_submitted_feeling_today():
     for patient_feeling in patient.patientfeelings:
         if patient_feeling.datetime.date() == datetime.today().date():
             has_patient_submitted_feeling_today = True
-    return has_patient_submitted_feeling_today
+    # return has_patient_submitted_feeling_today
     return False
 
 @app.route("/mood-tracker")
@@ -341,6 +341,11 @@ def get_doctor_data_json():
     doctor = crud.get_doctor_by_email(session["doctor_email"])
 
     return jsonify({'doctor' : doctor.get_doctor_data_for_homepage()})
+
+@app.route('/about')
+def about_catherapy():
+
+    return render_template("about.html")
 
 
 if __name__ == "__main__":

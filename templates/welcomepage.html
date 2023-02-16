@@ -2,35 +2,61 @@
 {% block title %} Catherapy {% endblock %}
 
 {% block body %}
-<div class="ms-3">
-    <br/> 
-    <h1> Welcome to Catherapy!</h1>
+<style>
+  body {
+    background-image: url('../static/img/cats-main.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  </style>
+<div class="container">
+  <div class="row justify-content-center align-items-center" style="height: 95vh;">
+    <div class="col-md-6 border rounded p-3" style="color :hsla(0, 0%, 0%, 0.992);">
+
+      <div style="color :hsla(0, 0%, 0%, 0.992);">
+        <h1>Welcome to Catherapy</h1>
+      </div>
 
 
-    <form action="/login" method="POST">
-          <label for="exampleInputEmail1" class="form-label">Email address</label>
-          <div class="col-md-3">
-            <input type="email" name="email" class="form-control">
-            </div>
+      <form action="/login" method="POST">
+        <label for="exampleInputEmail1" class="form-label">Email address</label>
 
-    
-          <label for="exampleInputPassword1" class="form-label">Password</label>
-          <div class="col-md-3">
-          <input type="password" name="password" class="form-control">
-          </div>
-        
-        <div id="emailHelp" class="form-text">{% with messages = get_flashed_messages() %} 
-            {% if messages %}
-                {% for message in messages %}
-                    {{ message }}
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}</div>
-        <button type="submit" class="btn btn-primary">Login</button>
+        <input type="email" name="email" class="form-control">
+
+
+
+        <label for="exampleInputPassword1" class="form-label">Password</label>
+
+        <input type="password" name="password" class="form-control">
+
+
+        <div id="emailHelp" class="form-text">{% with messages = get_flashed_messages() %}
+          {% if messages %}
+          {% for message in messages %}
+          {{ message }}
+          {% endfor %}
+          {% endif %}
+          {% endwith %}
+        </div>
+        <button type="submit" class="btn btn-primary mt-1"
+          style="background-color :hsla(0, 0%, 0%, 0.992);">Login</button>
       </form>
-    <ul>
-        <li><a href="/patient-registration"> Register as a Patient</a></li>
-        <li><a href="/doctor-registration"> Register as a Doctor</a></li>
-    </ul>
+
+      <div class="row d-flex justify-content-between mx-5 mt-2">
+        <div>
+          <a href="/patient-registration" class="text-start text-decoration-none" style="color :hsla(0, 0%, 0%, 0.992);">Register as a
+            Patient</a>
+        </div>
+        <div>
+          <a href="/doctor-registration" class="text-end text-decoration-none" style="color :hsla(0, 0%, 0%, 0.992);">Register as a
+            Doctor</a>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="row justify-content-center align-items-center">
+    <a href="/about" class="text-center text-decoration-none" style="color :hsla(0, 0%, 0%, 0.992);">© Sabryna Hancock</a>
+  </div>
+</div>
+
 {% endblock %}

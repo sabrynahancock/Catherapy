@@ -14,7 +14,10 @@ html, body {
   #searchresults {
     height : 500px;
     
+  }
 
+  .bg-image {
 
-
+    background-repeat: repeat-x;
+    background-size: cover;
   }

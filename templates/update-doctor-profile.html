@@ -1,78 +1,97 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 
 {% block title %} Catherapy
- {% endblock %}
+{% endblock %}
 
- {% block body %}
- <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="/homepage">
-    <img src="../static/img/logo.jpeg" width="30" height="30" class="d-inline-block align-top" alt="">
-    Catherapy
-  </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav">
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="/update-doctor-profile"> Edit Profile</a>
-          <a class="dropdown-item" name="/doc-logout" href="/doc-logout"><strong>Log Out</strong></a>
-        </div>
-      </li>
-    </ul>
+{% block body %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/homepage">Catherapy <i class="fa-solid fa-paw"></i></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/update-doctor-profile">Update Profile</a>
+        </li>
+      </ul>
+      <button onclick="window.location.href='/doc-logout'" style="background-color :hsla(0, 6%, 93%, 0.992);"
+        class="btn btn-outline-success" type="submit">Logout</button>
+    </div>
   </div>
 </nav>
 
 <form action="/update-doctor-profile-submit" method="post">
-  <h2>Select your availability</h2>
-  <table>
-    {% for day in time_slots %}
-    <tr>
-      {% for time in day %}
-      <td>
-        <input
-          type="checkbox"
-          id="timeslots"
-          name="time_slots"
-          value="{{time}}"
-        />
 
-        {{time.strftime('%A, ')}} {{time.strftime('%I:%M')}}
-      </td>
+  <div class="container-fluid ms-1">
+    <h2>Select your availability</h2>
+    {% set count = namespace(value=0) %}
+    <div class="row">
+      {% for day in time_slots %}
+      <div class="col-auto border p-3">
+        <h5>{{day[0].strftime('%a %b %d')}}</h5>
+        {% for time in day %}
+        <div class="my-3">
+          <input type="checkbox" class="btn-check" id="btn-check-outlined-{{ count.value }}" name="time_slots"
+            value="{{time}}">
+          <label class="btn btn-outline-primary" for="btn-check-outlined-{{ count.value }}">{{time.strftime('%I:%M
+            %p')}}</label>
+        </div>
+        {% set count.value = count.value + 1 %}
+        {% endfor %}
+      </div>
       {% endfor %}
-    </tr>
-    {% endfor %}
-  </table>
-  <h2>Select your specialties</h2>
-  {% for specialty in specialties %}
-  <input
-    type="checkbox"
-    id="doctorspecialty"
-    name="doctor_specialty"
-    value="{{specialty}}"
-  />
-
-  {{specialty}}
-  <br />
-  {% endfor %}
-  <h2>Select your accepted insurances</h2>
-
-  {% for insurance in insurances %}
-  <input
-    type="checkbox"
-    id="doctorinsurance"
-    name="doctor_insurance"
-    value="{{insurance}}"
-  />
-  {{insurance}} <br />{% endfor %}
-  <br />
-  <div>
-    <button type="submit">Update your profile</button>
+    </div>
   </div>
+
+  <br>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-2">
+        <div class="card card-specialty">
+          <div class="card-body">
+            <h2 class="card-title">Select Specialties</h2>
+            {% for specialty in specialties %}
+            <input class="form-check-input mt-0" type="checkbox" aria-label="Checkbox for following text input"
+              id="doctorspecialty" name="doctor_specialty" value="{{specialty}}" />
+
+            {{specialty}}
+            <br />
+            {% endfor %}
+            <h2>Insurance</h2>
+
+            {% for insurance in insurances %}
+
+            <input class="form-check-input mt-0" type="checkbox" aria-label="Radio button for following text input"
+              type="checkbox" id="doctorinsurance" name="doctor_insurance" value="{{insurance}}" />
+            {{insurance}} <br />{% endfor %}
+          </div>
+        </div>
+      </div>
+      <div id="btn">
+        <button type="submit" class="btn btn-primary mt-1" style="background-color :hsla(0, 0%, 0%, 0.992);">Update
+          Profile</button>
+      </div>
 </form>
 
+<style>
+  .navbar-nav {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .btn-outline-success {
+    color: rgb(0, 0, 0);
+    border-color: white;
+  }
+
+  .btn-outline-success:hover {
+    color: rgb(0, 0, 0);
+    background-color: rgb(0, 0, 0);
+    border-color: rgb(0, 0, 0);
+  }
+</style>
 {% endblock %}

@@ -8,6 +8,7 @@ from jinja2 import StrictUndefined
 from geopy import distance
 import cloudinary.uploader
 import os
+import random
 
 CLOUDINARY_KEY = os.environ['CLOUDINARY_KEY']
 CLOUDINARY_SECRET= os.environ['CLOUDINARY_SECRET']      
@@ -39,8 +40,9 @@ def home_page():
     doctor = None
 
     if "patient_email" in session:
+        affirmation = generate_positive_affirmation()
         patient = crud.get_patient_by_email(session["patient_email"])
-        return render_template("homepage.html", patient=patient, has_patient_submitted_feeling_today=has_patient_submitted_feeling_today())
+        return render_template("homepage.html", patient=patient, has_patient_submitted_feeling_today=has_patient_submitted_feeling_today(), affirmation=affirmation)
 
     if "doctor_email" in session:
         doctor = crud.get_doctor_by_email(session["doctor_email"])
@@ -175,7 +177,6 @@ def availabilities():
             time = (start_time + timedelta(hours=hour))
 
             time_slots[i].append(time)
-    print(time_slots)
     return time_slots
 
 
@@ -351,6 +352,25 @@ def about_catherapy_template():
 def adopt_template():
 
     return render_template("adopt.html")
+
+def generate_positive_affirmation():
+    affirmations = [
+        "I am worthy of love and respect.",
+        "I am capable of achieving my goals.",
+        "I am confident and strong.",
+        "I trust my intuition and make good decisions.",
+        "I am grateful for all the blessings in my life.",
+        "I am surrounded by positive energy and good people.",
+        "I believe in myself and my abilities.",
+        "I choose to let go of negativity and embrace positivity.",
+        "I am deserving of happiness and fulfillment.",
+        "I am loved and appreciated for who I am.",
+        "I am healthy and strong in mind, body, and spirit.",
+        "I am open to new opportunities and experiences.",
+        "I have the power to create the life I desire.",
+        "I am at peace with myself and the world around me."
+    ]
+    return random.choice(affirmations)
 
 
 if __name__ == "__main__":

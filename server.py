@@ -9,16 +9,18 @@ from geopy import distance
 import cloudinary.uploader
 import os
 import random
+import argon2
+from argon2 import PasswordHasher
 
 CLOUDINARY_KEY = os.environ['CLOUDINARY_KEY']
-CLOUDINARY_SECRET= os.environ['CLOUDINARY_SECRET']      
-CLOUD_NAME = "dvdpiblk8"  
+CLOUDINARY_SECRET = os.environ['CLOUDINARY_SECRET']
+CLOUD_NAME = "dvdpiblk8"
 
 app = Flask(__name__)
 app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined
 
-#add docstrings
+# add docstrings
 
 
 @app.route("/")
@@ -45,10 +47,9 @@ def home_page():
         return render_template("homepage.html", patient=patient, has_patient_submitted_feeling_today=has_patient_submitted_feeling_today(), affirmation=affirmation)
 
     if "doctor_email" in session:
+        reasons = generate_reasons_doctor_page()
         doctor = crud.get_doctor_by_email(session["doctor_email"])
-        return render_template("doctor-homepage.html", doctor=doctor)
-
-
+        return render_template("doctor-homepage.html", doctor=doctor, reasons=reasons)
 
 
 
@@ -61,18 +62,30 @@ def login():
     patient = crud.get_patient_by_email(email)
     doctor = crud.get_doctor_by_email(email)
 
-    if patient and patient.password == password:
-        session["patient_email"] = patient.email
-        return redirect("/homepage")
+    if patient:
+        # Verify the password using Argon2
+        ph = PasswordHasher()
+        try:
+            ph.verify(patient.password, password)
+        except:
+            pass
+        else:
+            session["patient_email"] = patient.email
+            return redirect("/homepage")
 
-    elif doctor and doctor.password == password:
-        session["doctor_email"] = doctor.email
-        return redirect("/homepage")
+    elif doctor:
+        # Verify the password using Argon2
+        ph = PasswordHasher()
+        try:
+            ph.verify(doctor.password, password)
+        except:
+            pass
+        else:
+            session["doctor_email"] = doctor.email
+            return redirect("/homepage")
 
-    else:
-        flash("The email or password you entered was incorrect.")
-
-        return redirect("/")
+    flash("The email or password you entered was incorrect.")
+    return redirect("/")
 
 
 @app.route("/doc-logout")
@@ -114,8 +127,12 @@ def patient_registration_submit():
         return redirect("/patient-registration")
 
     else:
+    
+        ph = PasswordHasher()
+        hashed_password = ph.hash(password)
+
         patient = crud.create_patient(
-            first_name, last_name, phone, address, email, password)
+            first_name, last_name, phone, address, email, hashed_password)
         db.session.add(patient)
         db.session.commit()
         flash("Account created successfully! Please log in.")
@@ -144,7 +161,8 @@ def doctor_registration_submit():
     gender = request.form.get("gender")
 
     img_file = request.files["file_input"]
-    result = cloudinary.uploader.upload(img_file,api_key=CLOUDINARY_KEY, api_secret=CLOUDINARY_SECRET,cloud_name=CLOUD_NAME)
+    result = cloudinary.uploader.upload(
+        img_file, api_key=CLOUDINARY_KEY, api_secret=CLOUDINARY_SECRET, cloud_name=CLOUD_NAME)
     img_url = result['secure_url']
     doctor = crud.get_doctor_by_email(email)
 
@@ -153,8 +171,10 @@ def doctor_registration_submit():
         return redirect("/doctor-registration")
 
     else:
+        ph = PasswordHasher()
+        hashed_password = ph.hash(password)
         doctor = crud.create_doctor(
-            first_name, last_name, address, phone, img_url, bio, email, password, gender)
+            first_name, last_name, address, phone, img_url, bio, email, hashed_password, gender)
 
         db.session.add(doctor)
         db.session.commit()
@@ -196,7 +216,6 @@ def update_availability_page():
 @app.route("/update-doctor-profile-submit", methods=["POST"])
 def update_doctor_profile():
 
-
     doctor = crud.get_doctor_by_email(session["doctor_email"])
     crud.delete_all_doctor_availabilities(doctor)
     crud.delete_all_doctor_specialties(doctor)
@@ -232,34 +251,37 @@ def search_submit():
     patient = crud.get_patient_by_email(session["patient_email"])
     checked_specialties = request.json.get("selectedSpecialties")
     selected_insurance = request.json.get("selectedInsurance")
-    
+
     search_results = crud.get_doctor_with_criteria(
         checked_specialties, selected_insurance)
     doctor_dict = {}
     doctors = []
     for doctor in search_results:
-        distance_from_patient = calculate_distance((doctor.lat, doctor.long) , (patient.lat, patient.long))
-        doctors.append(doctor.get_doctor_data_for_search_result(distance_from_patient))
+        distance_from_patient = calculate_distance(
+            (doctor.lat, doctor.long), (patient.lat, patient.long))
+        doctors.append(doctor.get_doctor_data_for_search_result(
+            distance_from_patient))
     doctors.sort(key=lambda doctor: doctor['distance_from_patient'])
 
     return jsonify(
         doctors=doctors
     )
+
+
 @app.route("/save-appt-database", methods=["POST"])
 def save_appt_database():
-
 
     doctor_id = request.form.get("doctor_id")
     doctor = crud.get_doctor_by_id(doctor_id)
     patient = crud.get_patient_by_email(session["patient_email"])
-    
+
     datetime = request.form.get("selected_availability")
-    
-    
+
     db.session.add(crud.create_appointment(doctor, patient, datetime))
     db.session.commit()
     crud.delete_doctor_availability(doctor, datetime)
     return redirect("/homepage")
+
 
 @app.route("/patient-delete-appointment", methods=["POST"])
 def patient_delete_appointment():
@@ -272,6 +294,7 @@ def patient_delete_appointment():
     crud.cancel_appointment(doctor, patient, datetime)
     return redirect("/homepage")
 
+
 @app.route("/doctor-delete-appointment", methods=["POST"])
 def doctor_delete_appointment():
 
@@ -282,13 +305,15 @@ def doctor_delete_appointment():
 
     crud.cancel_appointment(doctor, patient, datetime)
 
-    return jsonify({'doctor' : doctor.get_doctor_data_for_homepage()})
+    return jsonify({'doctor': doctor.get_doctor_data_for_homepage()})
+
 
 def calculate_distance(doctor, patient):
 
-    dist = distance.distance(doctor , patient).miles
-    
+    dist = distance.distance(doctor, patient).miles
+
     return round(dist, 1)
+
 
 @app.route("/add-patient-feeling-submit", methods=["POST"])
 def add_patient_feeling_submit():
@@ -297,10 +322,12 @@ def add_patient_feeling_submit():
     feeling_comment = request.form.get("feeling_comment")
     current_datetime = datetime.now()
 
-    db.session.add(crud.add_patient_feeling(patient, feeling_rating, feeling_comment, current_datetime))
+    db.session.add(crud.add_patient_feeling(
+        patient, feeling_rating, feeling_comment, current_datetime))
     db.session.commit()
 
     return redirect("/homepage")
+
 
 def has_patient_submitted_feeling_today():
     if "patient_email" in session:
@@ -312,18 +339,19 @@ def has_patient_submitted_feeling_today():
     for patient_feeling in patient.patientfeelings:
         if patient_feeling.datetime.date() == datetime.today().date():
             has_patient_submitted_feeling_today = True
-    # return has_patient_submitted_feeling_today
+    return has_patient_submitted_feeling_today
     return False
+
 
 @app.route("/mood-tracker")
 def mood_tracker_page():
     patient = None
 
-
     if "patient_email" in session:
         patient = crud.get_patient_by_email(session["patient_email"])
 
     return render_template("mood-tracker.html", patient=patient)
+
 
 @app.route('/feelings', methods=['GET'])
 def get_feelings():
@@ -333,7 +361,7 @@ def get_feelings():
     for feeling in feelings:
         feelings_list.append(feeling.feeling_rating)
 
-    return jsonify({'ratings' : feelings_list})
+    return jsonify({'ratings': feelings_list})
 
 
 @app.route('/doctor-data.json', methods=['GET'])
@@ -341,17 +369,20 @@ def get_doctor_data_json():
 
     doctor = crud.get_doctor_by_email(session["doctor_email"])
 
-    return jsonify({'doctor' : doctor.get_doctor_data_for_homepage()})
+    return jsonify({'doctor': doctor.get_doctor_data_for_homepage()})
+
 
 @app.route('/about')
 def about_catherapy_template():
 
     return render_template("about.html")
 
+
 @app.route('/adopt')
 def adopt_template():
 
     return render_template("adopt.html")
+
 
 def generate_positive_affirmation():
     affirmations = [
@@ -371,6 +402,22 @@ def generate_positive_affirmation():
         "I am at peace with myself and the world around me."
     ]
     return random.choice(affirmations)
+
+
+def generate_reasons_doctor_page():
+    reasons = [
+        'To help people overcome difficult challenges',
+        'To provide support to those who are struggling',
+        'To be a guide and mentor to those in need',
+        'To offer hope to those who feel lost or alone',
+        'To create a safe space for people to express themselves',
+        'To make a positive impact in the world',
+        'To empower individuals to reach their full potential',
+        'To promote mental wellness and self-care',
+        'To inspire change and growth in others',
+        'To be a voice for those who are not heard',
+    ]
+    return random.choice(reasons)
 
 
 if __name__ == "__main__":

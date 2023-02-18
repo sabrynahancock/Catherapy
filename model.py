@@ -17,7 +17,7 @@ class Patient(db.Model):
     lat = db.Column(db.Float, nullable=True)
     long = db.Column(db.Float, nullable=True)
     email = db.Column(db.String(50))
-    password = db.Column(db.String(20))
+    password = db.Column(db.String(200))
 
     appointments = db.relationship("Appointment", back_populates="patient")
     patientfeelings = db.relationship(
@@ -45,7 +45,7 @@ class Doctor(db.Model):
     photo_url = db.Column(db.String(100))
     bio = db.Column(db.Text)
     email = db.Column(db.String(50))
-    password = db.Column(db.String(20))
+    password = db.Column(db.String(200))
     gender = db.Column(db.String(50))
 
     appointments = db.relationship("Appointment", back_populates="doctor")
@@ -106,7 +106,7 @@ class Appointment(db.Model):
 
     def get_appointment_json(self):
         """ convers appointment to json for ajax request"""
-        return {'patient_first_name': self.patient.first_name , 'patient_last_name' : self.patient.last_name, 'patient_id' : self.patient.patient_id, 'datetime' : self.datetime}
+        return {'patient_first_name': self.patient.first_name , 'patient_last_name' : self.patient.last_name, 'patient_id' : self.patient.patient_id, 'datetime' : self.datetime, 'patient_phone' : self.patient.phone}
 
 
 class PatientFeeling(db.Model):

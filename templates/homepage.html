@@ -194,6 +194,11 @@ h1, h3 {
       <button type="submit" class="btn btn-primary mt-1 feelings-submit-btn">Submit</button>
     </div>
   </form>
+  {% else %}
+  <div class="alert alert-success" role="alert">
+    <h4 class="alert-heading">Thank you for submitting your feeling for today!</h4>
+    <p>We appreciate your input and hope you have a great day.</p>
+  </div>
   {% endif %}
 </div>
 

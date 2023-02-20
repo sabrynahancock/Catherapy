@@ -1,8 +1,5 @@
 {% extends "base.html" %}
 
-{% block title %} Catherapy
-{% endblock %}
-
 {% block body %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
@@ -27,8 +24,9 @@
     <div class="row">
       <div class="col-md-3">
         <div>
-        </br>
-          <h2 style="margin-left: 130px; font-size: 28px; font-weight: bold; text-transform: uppercase; color: #333;">Update profile</h2>
+          </br>
+          <h2 style="margin-left: 130px; font-size: 28px; font-weight: bold; text-transform: uppercase; color: #333;">
+            Update profile</h2>
         </div>
         <div class="card card-specialty">
           <div class="card-body">
@@ -45,43 +43,44 @@
 
             {% for insurance in insurances %}
 
-            <input class="form-check-input" aria-label="Radio button for following text input"
-              type="checkbox" id="doctorinsurance" name="doctor_insurance" value="{{insurance}}" />
+            <input class="form-check-input" aria-label="Radio button for following text input" type="checkbox"
+              id="doctorinsurance" name="doctor_insurance" value="{{insurance}}" />
             {{insurance}} <br />{% endfor %}
           </div>
         </div>
       </div>
       <div class="col">
-      </br>
+        </br>
         <!-- <div class="text-center"> -->
-          <h2 style="margin-left: 400px; font-size: 28px; font-weight: bold; text-transform: uppercase; color: #333;">Set Availability</h2>
+        <h2 style="margin-left: 400px; font-size: 28px; font-weight: bold; text-transform: uppercase; color: #333;">Set
+          Availability</h2>
         <!-- </div> -->
         {% set count = namespace(value=0) %}
         <div class="card">
-        <div class="row">
-          {% for day in time_slots %}
-          <div class="col-auto p-3">
-            <h5>{{day[0].strftime('%a %b %d')}}</h5>
-            {% for time in day %}
-            <div class="my-3">
-              <input type="checkbox" class="btn-check" id="btn-check-outlined-{{ count.value }}" name="time_slots"
-                value="{{time}}">
-              <label class="btn btn-outline-primary" for="btn-check-outlined-{{ count.value }}">{{time.strftime('%I:%M
-                %p')}}</label>
+          <div class="row">
+            {% for day in time_slots %}
+            <div class="col-auto p-3">
+              <h5>{{day[0].strftime('%a %b %d')}}</h5>
+              {% for time in day %}
+              <div class="my-3">
+                <input type="checkbox" class="btn-check" id="btn-check-outlined-{{ count.value }}" name="time_slots"
+                  value="{{time}}">
+                <label class="btn btn-outline-primary" for="btn-check-outlined-{{ count.value }}">{{time.strftime('%I:%M
+                  %p')}}</label>
+              </div>
+              {% set count.value = count.value + 1 %}
+              {% endfor %}
             </div>
-            {% set count.value = count.value + 1 %}
             {% endfor %}
           </div>
-          {% endfor %}
         </div>
-        </div>
+      </div>
     </div>
-  </div>
   </div>
   </div>
   <div class="row" id="btn">
     <button type="submit" class="btn btn-primary mt-1" style="background-color :hsla(0, 0%, 0%, 0.992);">Submit</button>
-</div>
+  </div>
 
 </form>
 
@@ -96,69 +95,74 @@
     color: rgb(0, 0, 0);
     border-color: white;
   }
-  .card-specialty {
-  height: 680px;
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
-.card-specialty h2 {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-#btn button {
-  margin-left: 25px;
-  max-width: 1645px;
-}
-.card-specialty label {
-  display: block;
-  margin-bottom: 5px;
-}
 
-.card-specialty input[type="checkbox"] {
-  margin-right: 10px;
-}
+  .card-specialty {
+    height: 680px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-specialty h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  #btn button {
+    margin-left: 25px;
+    max-width: 1645px;
+  }
+
+  .card-specialty label {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .card-specialty input[type="checkbox"] {
+    margin-right: 10px;
+  }
 
   .btn-outline-success:hover {
     color: rgb(0, 0, 0);
     background-color: rgb(0, 0, 0);
     border-color: rgb(0, 0, 0);
   }
+
   .card {
-  background-color: #f8f9fa;
-  border: 1px solid #ced4da;
-  border-radius: 10px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  margin: 20px 0;
-  padding: 20px;
-  max-width: 1100px; 
-}
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    padding: 20px;
+    max-width: 1100px;
+  }
 
-.card h5 {
-  margin-bottom: 10px;
-}
+  .card h5 {
+    margin-bottom: 10px;
+  }
 
-.card label {
-  margin-left: 10px;
-}
+  .card label {
+    margin-left: 10px;
+  }
 
 
 
-.card input[type="checkbox"] + label {
-  border: 1px solid #fcf9f9;
-  background-color: #f0f0f0;
-  color: #000000;
-  border-radius: 10px;
-  padding: 10px 15px;
-  cursor: pointer;
-}
+  .card input[type="checkbox"]+label {
+    border: 1px solid #fcf9f9;
+    background-color: #f0f0f0;
+    color: #000000;
+    border-radius: 10px;
+    padding: 10px 15px;
+    cursor: pointer;
+  }
 
-.card input[type="checkbox"]:checked + label {
-  background-color: #000000;
-  color: #fff;
-  border-color: #000000;
-}
+  .card input[type="checkbox"]:checked+label {
+    background-color: #000000;
+    color: #fff;
+    border-color: #000000;
+  }
 </style>
 {% endblock %}

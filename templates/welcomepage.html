@@ -1,14 +1,6 @@
 {% extends 'base.html' %}
-{% block title %} Catherapy {% endblock %}
 
 {% block body %}
-<style>
-  body {
-    background-image: url('../static/img/cats-main.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  </style>
 <div class="container">
   <div class="row justify-content-center align-items-center" style="height: 95vh;">
     <div class="col-md-6 border rounded p-3" style="color :hsla(0, 0%, 0%, 0.992);">
@@ -44,19 +36,43 @@
 
       <div class="row d-flex justify-content-between mx-5 mt-2">
         <div>
-          <a href="/patient-registration" class="text-start text-decoration-none" style="color :hsla(0, 0%, 0%, 0.992);">Register as a
+          <a href="/patient-registration" class="text-start text-decoration-none"
+            style="color :hsla(0, 0%, 0%, 0.992);">Register as a
             Patient</a>
         </div>
         <div>
-          <a href="/doctor-registration" class="text-end text-decoration-none" style="color :hsla(0, 0%, 0%, 0.992);">Register as a
+          <a href="/doctor-registration" class="text-end text-decoration-none"
+            style="color :hsla(0, 0%, 0%, 0.992);">Register as a
             Doctor</a>
         </div>
       </div>
     </div>
   </div>
   <div class="row justify-content-center align-items-center">
-    <a href="/about" class="text-center text-decoration-none" style="color :hsla(0, 0%, 0%, 0.992);">© Sabryna Hancock</a>
+    <a href="/about" class="text-center text-decoration-none" style="color :hsla(0, 0%, 0%, 0.992);">© Sabryna
+      Hancock</a>
   </div>
 </div>
+
+<video autoplay muted loop id="myVideo">
+  <source src="../static/img/13.mp4" type="video/mp4">
+</video>
+<style>
+
+
+
+body {
+  background-size: cover;
+}
+
+#myVideo {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  z-index: -1;
+}
+</style>
 
 {% endblock %}

@@ -20,8 +20,6 @@ app = Flask(__name__)
 app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined
 
-# add docstrings
-
 
 @app.route("/")
 def welcome_page():
@@ -38,6 +36,7 @@ def welcome_page():
 
 @app.route("/homepage")
 def home_page():
+    """homepage for doctor and patients"""
     patient = None
     doctor = None
 
@@ -63,7 +62,7 @@ def login():
     doctor = crud.get_doctor_by_email(email)
 
     if patient:
-        # Verify the password using Argon2
+       
         ph = PasswordHasher()
         try:
             ph.verify(patient.password, password)
@@ -74,7 +73,7 @@ def login():
             return redirect("/homepage")
 
     elif doctor:
-        # Verify the password using Argon2
+        
         ph = PasswordHasher()
         try:
             ph.verify(doctor.password, password)

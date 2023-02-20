@@ -4,8 +4,6 @@ from model import db, Patient, Doctor, Appointment, PatientFeeling, DoctorSpecia
 from geopy.geocoders import Nominatim
 
 
-# add docstrigns on each function 
-
 def create_patient(first_name, last_name, phone, address, email, password):
     """Creates a Patient"""
     lat_long = get_lat_long(address)
@@ -39,6 +37,7 @@ def get_doctor_by_email(email):
 
 
 def get_doctor_availability(date):
+    """gets doctor availability"""
     return DoctorAvailability.query.filter(DoctorAvailability.date == date).first()
 
 
@@ -87,8 +86,6 @@ def get_doctor_with_criteria(specialties, insurance):
             doctors_specialty_names.add(specialty.specialty_name)
         if set(specialties) <= doctors_specialty_names:
             matching_doctors.add(doctor)
-
-    # print(calculate_distance(matching_doctors[0], patient))
 
 
     return matching_doctors
@@ -140,16 +137,6 @@ def add_patient_feeling(patient, feeling_rating, feeling_comment, datetime):
 def get_patient_feeling_rating(patient_id):
     return PatientFeeling.query.filter_by(patient_id=patient_id).all()
 
-# def get_doctor_lat_long(doctor):
-
-#     return Doctor.query.filter(Doctor.lat == lat , Doctor.long == long).first()
-
-
-# def get_patient_lat_long(patient):
-
-#     return Patient.query.filter(Patient.lat == lat , Patient.long == long).first()
-
-# def calculate_distance(doctor, patient):
 
 
 

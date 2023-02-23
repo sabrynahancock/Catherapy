@@ -2,10 +2,10 @@
 
 {% block body %}
 <div class="container">
-  <div class="row justify-content-center align-items-center" style="height: 95vh;">
+  <div class="row justify-content-center align-items-center" style="height: 95vh; margin-left: 100px;">
     <div class="col-md-6 border rounded p-3" style="color :hsla(0, 0%, 0%, 0.992);">
 
-      <div style="color :hsla(0, 0%, 0%, 0.992);">
+      <div class="container text-center" style="color: hsla(0, 0%, 0%, 0.992);">
         <h1>Welcome to Catherapy</h1>
       </div>
 
@@ -31,7 +31,7 @@
           {% endwith %}
         </div>
         <button type="submit" class="btn btn-primary mt-1"
-          style="background-color :hsla(0, 0%, 0%, 0.992);">Login</button>
+          style="background-color :hsla(0, 0%, 0%, 0.992); border-color: black; font-family: Arial, Helvetica, sans-serif;">Login</button>
       </form>
 
       <div class="row d-flex justify-content-between mx-5 mt-2">
@@ -55,24 +55,20 @@
 </div>
 
 <video autoplay muted loop id="myVideo">
-  <source src="../static/img/13.mp4" type="video/mp4">
+  <source src="../static/img/home.mp4" type="video/mp4">
 </video>
 <style>
+  body {
+    background-size: cover;
+  }
 
-
-
-body {
-  background-size: cover;
-}
-
-#myVideo {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  min-width: 100%;
-  min-height: 100%;
-  z-index: -1;
-}
+  #myVideo {
+    position: fixed;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -1;
+  }
 </style>
 
 {% endblock %}

@@ -21,6 +21,7 @@ app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined
 
 
+
 @app.route("/")
 def welcome_page():
     """Welcome Page"""

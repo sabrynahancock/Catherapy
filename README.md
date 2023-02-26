@@ -2,8 +2,6 @@
 
 Catherapy is a  full stack web application that connects mental health patients with doctors. The app is designed to help patients find the right mental care provider and help doctors manage their practice effectively.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/U4-HLFf7qtM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-
 ## Features
 
 - Patients can track their mood and search for doctors using filters such as distance, accepted insurances, and specialties.
